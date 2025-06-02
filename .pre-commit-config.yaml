@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix, lf]
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: [--branch, main]
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.26.0
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/bitnami/readme-generator-for-helm
+    rev: 2.7.0
+    hooks:
+      - id: helm-readme-generator
+        pass_filenames: false
+        always_run: true
+        args:
+          [
+            --readme=charts/kubebrowser/README.md,
+            --values=charts/kubebrowser/values.yaml,
+          ]
