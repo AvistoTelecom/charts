@@ -6,7 +6,7 @@
 global:
   ## @param global.imageRegistry Global Docker image registry
   ##
-  imageRegistry: "ghcr.io"
+  imageRegistry: ""
   ## @param global.imagePullPolicy kubebrowser image pull policy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -65,7 +65,7 @@ server:
   ## @param server.image.pullSecrets Specify image pull secrets for server
   ##
   image:
-    registry: ""
+    registry: "ghcr.io"
     repository: avistotelecom/kubebrowser
     tag: "0.6.0"
     digest: ""
