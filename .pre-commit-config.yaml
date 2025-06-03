@@ -35,3 +35,11 @@ repos:
     hooks:
       - id: shellcheck
       - id: helmlint
+  - repo: local
+    hooks:
+      - id: check-app-version
+        name: Check Helm appVersion matches tag
+        entry: scripts/checkAppVersion.sh
+        language: script
+        types: [yaml]
+        pass_filenames: false
