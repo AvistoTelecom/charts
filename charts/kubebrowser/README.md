@@ -6,7 +6,7 @@
 
 | Name                                        | Description                                                                                  | Value           |
 | ------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
-| `global.imageRegistry`                      | Global Docker image registry                                                                 | `ghcr.io`       |
+| `global.imageRegistry`                      | Global Docker image registry                                                                 | `""`            |
 | `global.imagePullPolicy`                    | kubebrowser image pull policy                                                                | `""`            |
 | `global.imagePullSecrets`                   | Global Docker registry secret names as an array                                              | `[]`            |
 | `global.storageClass`                       | Global StorageClass for Persistent Volume(s)                                                 | `""`            |
@@ -24,7 +24,7 @@
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `server.name`                                              | Name of the server                                                                                                               | `server`                                                                                          |
 | `server.replicaCount`                                      | Number of kubebrowser server replicas                                                                                            | `1`                                                                                               |
-| `server.image.registry`                                    | server image registry                                                                                                            | `""`                                                                                              |
+| `server.image.registry`                                    | server image registry                                                                                                            | `ghcr.io`                                                                                         |
 | `server.image.repository`                                  | server image repository                                                                                                          | `avistotelecom/kubebrowser`                                                                       |
 | `server.image.tag`                                         | server image tag (immutable tags are recommended)                                                                                | `0.6.0`                                                                                           |
 | `server.image.digest`                                      | server image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                           | `""`                                                                                              |
