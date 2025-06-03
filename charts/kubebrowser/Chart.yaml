@@ -11,3 +11,4 @@ dependencies:
 maintainers:
   - name: Yann Lacroix
     email: yann.lacroix@avisto.com
+icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
