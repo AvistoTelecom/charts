@@ -30,3 +30,8 @@ repos:
             --readme=charts/kubebrowser/README.md,
             --values=charts/kubebrowser/values.yaml,
           ]
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.29
+    hooks:
+      - id: shellcheck
+      - id: helmlint
