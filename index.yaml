@@ -3,6 +3,24 @@ entries:
   kubebrowser:
   - apiVersion: v2
     appVersion: 0.6.0
+    created: "2025-06-03T10:15:16.068471952Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Allow whitelisted people to access your kubeconfigs
+    digest: 9bb88d9aae774e78a37b1b4d093b2f3aa63b7ca5fe4e1dfc0574a3775352ab63
+    icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: kubebrowser
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.0.1/kubebrowser-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 0.6.0
     created: "2025-06-02T19:57:49.494907681Z"
     dependencies:
     - name: common
@@ -15,4 +33,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.0.0/kubebrowser-1.0.0.tgz
     version: 1.0.0
-generated: "2025-06-02T19:57:49.494920726Z"
+generated: "2025-06-03T10:15:16.068486288Z"
