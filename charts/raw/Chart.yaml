@@ -1,0 +1,12 @@
+apiVersion: v2
+name: raw
+description: A place for all the Kubernetes resources which don't already have a home
+keywords:
+  - raw
+  - incubator
+  - incubator-raw
+maintainers:
+  - name: Brawdunoir
+    email: yann.lacroix@avisto.com
+version: 1.0.0
+kubeVersion: ">=1.16.0-0"

@@ -1,0 +1,7 @@
+## @section Global
+## @param resources List of "raw" Kubernetes resources
+##
+resources: []
+## @param templates List of "templated" Kubernetes resources
+##
+templates: []
