@@ -65,7 +65,7 @@ for chart_dir in "$SCRIPT_ROOT"/charts/*/; do
 
   # Check each path
   for path in ${CHART_PATHS[$chart_name]}; do
-    if ! value=$(yq -r ".$path // empty" "$values_yaml" 2>/dev/null); then
+    if ! value=$(yq -r ".${path}" "$values_yaml" 2>/dev/null); then
       print_red "[$chart_name] ERROR: Failed to parse $path in values.yaml"
       failed=1
       continue

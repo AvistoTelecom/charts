@@ -8,6 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: yq --version
-      - run: yq -r ".server.image.tag // empty" "charts/kubebrowser/values.yaml"
       - uses: pre-commit/action@v3.0.1
