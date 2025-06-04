@@ -1,0 +1,155 @@
+apiVersion: {{ include "common.capabilities.daemonset.apiVersion" . }}
+kind: DaemonSet
+metadata:
+  name: {{ include "wazuhAgent.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.wazuhAgent.labels .Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+spec:
+  {{- if .Values.wazuhAgent.updateStrategy }}
+  updateStrategy: {{- toYaml .Values.wazuhAgent.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.wazuhAgent.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app: {{ include "wazuhAgent.fullname" . }}
+  template:
+    metadata:
+      name: {{ include "wazuhAgent.fullname" . }}
+      labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app: {{ include "wazuhAgent.fullname" . }}
+      annotations:
+        {{- if .Values.wazuhAgent.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.wazuhAgent.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.extraPodSpec }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.wazuhAgent.extraPodSpec "context" $) | indent 6 }}
+      {{- end }}
+      hostPID: true
+      hostIPC: true
+      {{- include "wazuhAgent.imagePullSecrets" . | indent 6 }}
+      containers:
+        - name: {{ include "wazuhAgent.fullname" . }}
+          image: {{ include "wazuhAgent.image" . }}
+          imagePullPolicy: {{ .Values.wazuhAgent.image.pullPolicy | quote }}
+          {{- if .Values.wazuhAgent.containerSecurityContext.enabled }}
+          securityContext:
+            privileged: true
+          {{- end }}
+          {{- if .Values.wazuhAgent.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.wazuhAgent.command "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.wazuhAgent.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.wazuhAgent.args "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.wazuhAgent.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.wazuhAgent.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthcheck
+              port: {{ .Values.wazuhAgent.containerPorts.http }}
+          {{- end }}
+          {{- if .Values.wazuhAgent.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.wazuhAgent.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthcheck
+              port: {{ .Values.wazuhAgent.containerPorts.http }}
+          {{- end }}
+          ports:
+            - name: agent-http
+              containerPort: {{ .Values.wazuhAgent.containerPorts.http }}
+              protocol: TCP
+          {{- if .Values.wazuhAgent.resources }}
+          resources: {{- toYaml .Values.wazuhAgent.resources | nindent 12 }}
+          {{- end }}
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: JOIN_MANAGER_MASTER_HOST
+              value: {{ .Values.wazuhAgent.configuration.joinManagerMasterHost | quote }}
+            - name: JOIN_MANAGER_WORKER_HOST
+              value: {{ .Values.wazuhAgent.configuration.joinManagerWorkerHost | quote }}
+            - name: JOIN_MANAGER_PROTOCOL
+              value: {{ .Values.wazuhAgent.configuration.joinManagerProtocol | quote }}
+            - name: WAZUH_GROUPS
+              value: {{ .Values.wazuhAgent.configuration.wazuhGroups | quote }}
+            - name: JOIN_MANAGER_API_PORT
+              value: {{ .Values.wazuhAgent.configuration.joinManagerApiPort | quote }}
+            - name: JOIN_MANAGER_PORT
+              value: {{ .Values.wazuhAgent.configuration.joinManagerPort | quote }}
+            - name: JOIN_MANAGER_USER
+              valueFrom: {{- toYaml .Values.wazuhAgent.configuration.joinManagerUser | nindent 16 }}
+            - name: JOIN_MANAGER_PASSWORD
+              valueFrom: {{- toYaml .Values.wazuhAgent.configuration.joinManagerPassword | nindent 16 }}
+          {{- if .Values.wazuhAgent.extraEnvVars }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.wazuhAgent.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /var/run
+              name: var-run
+            - mountPath: /host/dev
+              name: dev
+            - mountPath: /host/sys
+              name: sys
+              readOnly: true
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/etc
+              name: etc
+              readOnly: true
+            - mountPath: /var/run/docker.sock
+              name: docker-socket-mount
+            - mountPath: /host/var/run/docker.sock
+              name: docker-socket-mount
+            - mountPath: /host/boot
+              name: boot
+              readOnly: true
+            - mountPath: /host/usr
+              name: usr
+              readOnly: true
+            - mountPath: /host/lib/modules
+              name: modules
+              readOnly: true
+            - mountPath: /host/var/log
+              name: log
+              readOnly: true
+            {{- if .Values.wazuhAgent.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wazuhAgent.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock
+        - name: var-run
+          hostPath:
+            path: /var/run
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: boot
+          hostPath:
+            path: /boot
+        - name: usr
+          hostPath:
+            path: /usr
+        - name: modules
+          hostPath:
+            path: /lib/modules
+        - name: log
+          hostPath:
+            path: /var/log
+        {{- if .Values.wazuhAgent.extraVolumes }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.wazuhAgent.extraVolumes "context" $ ) | nindent 8 }}
+        {{- end }}

@@ -1,0 +1,230 @@
+# Default values for wazuhAgent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @section Global values
+## Please, note that this will override the parameters, including dependencies, configured to use the global value
+##
+global:
+  ## @param global.imageRegistry Global Docker image registry
+  ##
+  imageRegistry: "rgy.k8s.devops-svc-ag.com"
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
+  ## e.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  ## @param global.storageClass Global StorageClass for Persistent Volume(s)
+  ##
+  storageClass: ""
+
+## Wazuh Agent image version
+## @param image.registry Wazuh Agent image registry
+## @param image.pullPolicy Wazuh Agent image pull policy
+## @param image.pullSecrets Specify image pull secrets
+##
+image:
+  registry: rgy.k8s.devops-svc-ag.com
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Example:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+
+## @param kubeVersion Override Kubernetes version
+##
+kubeVersion: ""
+## @param nameOverride String to partially override common.names.fullname template (will maintain the release name)
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: ""
+## @param clusterDomain Kubernetes Cluster Domain
+##
+clusterDomain: cluster.local
+## @param commonLabels Add labels to all the deployed resources
+##
+commonLabels: {}
+## @param commonAnnotations Add annotations to all the deployed resources
+##
+commonAnnotations: {}
+
+## @section Wazuh Agent values
+##
+wazuhAgent:
+  ## @param wazuhAgent.name Name of the Wazuh Agent
+  ##
+  name: wazuh-agent
+
+  ## Wazuh Agent image version
+  ## @param wazuhAgent.image.registry Wazuh Agent image registry
+  ## @param wazuhAgent.image.repository Wazuh Agent image repository
+  ## @param wazuhAgent.image.tag Wazuh Agent image tag (immutable tags are recommended)
+  ## @param wazuhAgent.image.digest Wazuh Agent image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param wazuhAgent.image.pullPolicy Wazuh Agent image pull policy
+  ## @param wazuhAgent.image.pullSecrets Specify image pull secrets
+  ##
+  image:
+    registry: ""
+    repository: avisto/wazuh-agent
+    tag: "4.12.0"
+    digest: ""
+
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## Example:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+
+  ## Wazuh Agent global configuration
+  ##
+  ## @param wazuhAgent.configuration.joinManagerMasterHost Ip address or Domain name of Wazuh server using for restapi
+  ## @param wazuhAgent.configuration.joinManagerWorkerHost Ip address or Domain name of Wazuh worker for agent connection, if using ALL in One installation the same value as for "joinManagerMasterHost"
+  ## @param wazuhAgent.configuration.joinManagerProtocol Http or https protocol for Wazuh restapi
+  ## @param wazuhAgent.configuration.joinManagerApiPort Port where the Wazuh API listened
+  ## @param wazuhAgent.configuration.joinManagerPort Port where the Wazuh Server listened
+  ## @param wazuhAgent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
+  ## @param wazuhAgent.configuration.joinManagerUser.secretKeyRef.name Name of the Kubernetes secret containing the Wazuh API credentials
+  ## @param wazuhAgent.configuration.joinManagerUser.secretKeyRef.key Name of the key in the Kubernetes secret containing the Wazuh API username
+  ## @param wazuhAgent.configuration.joinManagerPassword.secretKeyRef.name Name of the Kubernetes secret containing the Wazuh API credentials
+  ## @param wazuhAgent.configuration.joinManagerPassword.secretKeyRef.key Name of the key in the Kubernetes secret containing the Wazuh API password
+  configuration:
+    joinManagerMasterHost: ""
+    joinManagerWorkerHost: ""
+    joinManagerProtocol: "https"
+    joinManagerApiPort: "55000"
+    joinManagerPort: "1514"
+    wazuhGroups: "default"
+    joinManagerUser:
+      secretKeyRef:
+        name: wazuh-api-cred
+        key: username
+    joinManagerPassword:
+      secretKeyRef:
+        name: wazuh-api-cred
+        key: password
+
+  ## @param wazuhAgent.extraEnvVars Array with extra environment variables to add to Wazuh Agent nodes
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
+
+  ## @param wazuhAgent.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for Wazuh Agent nodes
+  ##
+  extraEnvVarsCM: ""
+
+  ## @param wazuhAgent.extraEnvVarsSecret Name of existing Secret containing extra env vars for Wazuh Agent nodes
+  ##
+  extraEnvVarsSecret: ""
+
+  ## @param wazuhAgent.command Override default container command (useful when using custom images)
+  ##
+  command: []
+
+  ## @param wazuhAgent.args Override default container args (useful when using custom images)
+  ##
+  args: []
+
+  ## Configure extra options for Wazuh Agent containers' liveness, readiness and startup probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  ## @param wazuhAgent.livenessProbe.enabled Enable livenessProbe on Wazuh Agent containers
+  ## @param wazuhAgent.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param wazuhAgent.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param wazuhAgent.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param wazuhAgent.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 5
+
+  ## @param wazuhAgent.readinessProbe.enabled Enable readinessProbe on Wazuh Agent containers
+  ## @param wazuhAgent.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param wazuhAgent.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param wazuhAgent.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param wazuhAgent.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 5
+
+  ## Wazuh Agent resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param wazuhAgent.resources.limits The resources limits for the Wazuh Agent containers
+  ## @param wazuhAgent.resources.requests The requested resources for the Wazuh Agent containers
+  ##
+  resources:
+    limits: {}
+    requests: {}
+
+  ## Container Security Context
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param wazuhAgent.containerSecurityContext.enabled Enable container security context
+  containerSecurityContext:
+    enabled: true
+
+  ## @param wazuhAgent.containerPorts.http Wazuh Agent container port for http
+  ##
+  containerPorts:
+    http: 5000
+
+  ## @param wazuhAgent.labels Map of labels to add to the daemonset
+  ##
+  labels: {}
+  ## @param wazuhAgent.annotations Annotations for Wazuh Agent primary pods
+  ##
+  annotations: {}
+  ## @param wazuhAgent.podLabels Map of labels to add to the pods
+  ##
+  podLabels: {}
+  ## @param wazuhAgent.podAnnotations Map of annotations to add to the pods
+  ##
+  podAnnotations: {}
+
+  ## @extra wazuhAgent.updateStrategy Wazuh Agent daemonset update strategy
+  ## @param wazuhAgent.updateStrategy.type Wazuh Agent daemonset update strategy type
+  ## @param wazuhAgent.updateStrategy.rollingUpdate Wazuh Agent daemonset update strategy parameters
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/#updating-a-daemonset
+  ##
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate: {}
+
+  ## @param wazuhAgent.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Wazuh Agent container(s)
+  ##
+  extraVolumeMounts: []
+
+  ## @param wazuhAgent.extraVolumes Optionally specify extra list of additional volumes for the Wazuh Agent pod(s)
+  ##
+  extraVolumes: []
+
+  ## @param wazuhAgent.extraPodSpec Optionally specify extra PodSpec for the Wazuh Agent pod(s)
+  ##
+  extraPodSpec: {}
