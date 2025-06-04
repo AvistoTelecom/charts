@@ -5,5 +5,8 @@ keywords:
   - raw
   - incubator
   - incubator-raw
+maintainers:
+  - name: Brawdunoir
+    email: yann.lacroix@avisto.com
 version: 1.0.0
 kubeVersion: ">=1.16.0-0"
