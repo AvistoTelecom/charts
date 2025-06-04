@@ -1,5 +1,29 @@
 # Wazuh Agent
 
+## Installation
+
+Add the Avisto repository:
+
+```
+helm repo add avisto https://avistotelecom.github.io/charts/
+```
+
+Search for the version to install:
+
+```
+helm search repo -l avisto/wazuh-agent
+```
+
+Install the chart:
+
+```
+helm install my-wazuh-agent avisto/wazuh-agent --version 4.12.0
+```
+
+## Configuration
+
+
+
 ## Parameters
 
 ### Global values
