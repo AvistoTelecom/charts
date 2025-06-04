@@ -1,0 +1,14 @@
+{{- $template := fromYaml (include "raw.resource" .) -}}
+{{- range .Values.resources }}
+---
+{{ toYaml (merge . $template) -}}
+{{- end }}
+{{- range $i, $t := .Values.templates }}
+{{ $kubeResources := tpl $t $ }}
+{{- range regexSplit "---" $kubeResources -1 }}
+{{- if . | trim }}
+---
+{{ merge (. | fromYaml) $template | toYaml }}
+{{- end }}
+{{- end }}
+{{- end }}
