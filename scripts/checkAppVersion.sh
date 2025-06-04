@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script assert that `appVersion` in `Chart.yaml` is always consistent with the images in the chart's `values.yaml`
 
 set -o errexit
 set -o pipefail
