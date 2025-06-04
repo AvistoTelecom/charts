@@ -8,5 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: chrisdickinson/setup-yq@v1.0.0
       - uses: pre-commit/action@v3.0.1
