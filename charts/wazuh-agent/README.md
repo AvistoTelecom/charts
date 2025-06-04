@@ -78,7 +78,7 @@ The wazuh agent needs the /var/ossec/etc/ossec.conf file in order to apply the c
 
 The configmap file :
 
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -88,17 +88,3 @@ data:
         <ossec_config>
         ...
         <ossec_config>
-```
-
-The volumes in the values.yaml file :
-
-```
-extraVolumes:
-  - name: wazuh-agent-conf-volume
-    configMap:
-      name: wazuh-agent-conf
-extraVolumeMounts:
-  - name: wazuh-agent-conf-volume
-    mountPath: /var/ossec/etc/ossec.conf
-    subPath: ossec.conf
-```
