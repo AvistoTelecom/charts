@@ -8,3 +8,6 @@ dependencies:
   - name: common
     version: 2.30.0
     repository: oci://registry-1.docker.io/bitnamicharts
+maintainers:
+  - name:  Kylian Le Saux 
+    email: kylian.le-saux@avisto.com
