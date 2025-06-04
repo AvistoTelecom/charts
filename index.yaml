@@ -69,4 +69,22 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.0.0/kubebrowser-1.0.0.tgz
     version: 1.0.0
-generated: "2025-06-03T14:08:11.325824674Z"
+  raw:
+  - apiVersion: v2
+    created: "2025-06-04T13:38:08.655809333Z"
+    description: A place for all the Kubernetes resources which don't already have
+      a home
+    digest: f872f76318463b40c9ce4a85de18318e4c3dc62a7c6ad425fda6b7df7083c526
+    keywords:
+    - raw
+    - incubator
+    - incubator-raw
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: raw
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-06-04T13:38:08.655822588Z"
