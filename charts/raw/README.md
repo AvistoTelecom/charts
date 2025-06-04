@@ -99,4 +99,4 @@ templates:
 
 ## Fork
 
-This chart has been forked from `itscontained/raw`.
+This chart was forked from `itscontained/raw`.
