@@ -3,6 +3,12 @@
 set -o errexit
 set -o pipefail
 
+# Check for yq dependency
+if ! command -v yq >/dev/null 2>&1; then
+  echo -e "\033[1;31mERROR: 'yq' is required but not installed. Please install yq and try again.\033[0m"
+  exit 1
+fi
+
 SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 
 LIGHT_GREEN="\033[1;32m"
