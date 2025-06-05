@@ -51,8 +51,8 @@ agent:
   ## @param agent.image.pullSecrets Specify image pull secrets
   ##
   image:
-    registry: ""
-    repository: avisto/wazuh-agent
+    registry: "ghcr.io"
+    repository: avistotelecom/docker-wazuh-agent
     tag: "4.12.0"
     digest: ""
 
