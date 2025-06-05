@@ -1,5 +1,33 @@
 # Kubebrowser
 
+Kubebrowser is a self-service platform that enables users to obtain their own Kubeconfig credentials using OIDC authentication.
+
+> Your API server should be configured to use the same OIDC application as Kubebrowser. Managed Kubernetes services such as EKS, AKS, and others support integration with your OIDC provider. For more details, see the [Kubernetes documentation on configuring the API server for OIDC authentication](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuring-the-api-server).
+
+## Installation
+
+Prepare your `values.yaml`
+
+```yaml
+server:
+  oidc:
+    clientID: <your-client-id>
+    clientSecret: <your-client-secret>
+    issuerURL: <your-issuer-url>
+```
+
+Add repository
+
+```
+helm repo add avisto https://avistotelecom.github.io/charts/
+```
+
+Install chart
+
+```
+helm install my-kubebrowser avisto/kubebrowser -f values.yaml
+```
+
 ## Parameters
 
 ### Global values
