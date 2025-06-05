@@ -51,11 +51,3 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" (include "common.names.fullname" .) $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
-
-
-{{/*
-Return the proper Docker Image Registry Secret Names for Wazuh Agent
-*/}}
-{{- define "agent.imagePullSecrets" -}}
-{{ include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.agent.image) "global" .Values.global) }}
-{{- end -}}
