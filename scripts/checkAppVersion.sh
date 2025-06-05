@@ -28,6 +28,7 @@ print_red() {
 declare -A CHART_PATHS
 CHART_PATHS["kubebrowser"]="server.image.tag"
 CHART_PATHS["raw"]=""
+CHART_PATHS["wazuh-agent"]=""
 # Add more as needed, space-separated for multiple paths
 
 failed=0
