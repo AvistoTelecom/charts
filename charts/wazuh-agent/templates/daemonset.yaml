@@ -82,9 +82,15 @@ spec:
             - name: JOIN_MANAGER_PORT
               value: {{ .Values.agent.configuration.joinManagerPort | quote }}
             - name: JOIN_MANAGER_USER
-              valueFrom: {{- toYaml .Values.agent.configuration.joinManagerUser | nindent 16 }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "agent.fullname" . }}-api-cred
+                  key: username
             - name: JOIN_MANAGER_PASSWORD
-              valueFrom: {{- toYaml .Values.agent.configuration.joinManagerPassword | nindent 16 }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "agent.fullname" . }}-api-cred
+                  key: password
           {{- if .Values.agent.extraEnvVars }}
           {{- include "common.tplvalues.render" (dict "value" .Values.agent.extraEnvVars "context" $) | nindent 12 }}
           {{- end }}
@@ -122,6 +128,9 @@ spec:
             - mountPath: /host/var/log
               name: log
               readOnly: true
+            - mountpath: /var/ossec/etc/ossec.conf
+              name: wazuh-agent-conf
+              subPath: ossec.conf
             {{- if .Values.agent.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.agent.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -155,7 +164,10 @@ spec:
             path: /lib/modules
         - name: log
           hostPath:
-            path: /var/log
+            path: /var/
+        - name: wazuh-agent-conf
+          configMap:
+            name: {{ include "agent.configmapName" . }}
         {{- if .Values.agent.extraVolumes }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.agent.extraVolumes "context" $ ) | nindent 8 }}
         {{- end }}
