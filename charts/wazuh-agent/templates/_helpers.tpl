@@ -51,3 +51,27 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" (include "common.names.fullname" .) $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{/* 
+Get the agent configuration ConfigMap name. 
+*/}}
+{{- define "agent.configmapName" -}}
+{{- if .Values.agent.existingConfigmap -}}
+{{- printf "%s" (tpl .Values.agent.existingConfigmap $) -}}
+{{- else -}}
+{{- printf "%s-ossec-conf" (include "agent.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the password secret.
+*/}}
+{{- define "agent.secretName" -}}
+{{- if .Values.global.postgresql.auth.existingSecret -}}
+    {{- printf "%s" (tpl .Values.global.postgresql.auth.existingSecret $) -}}
+{{- else if .Values.auth.existingSecret -}}
+    {{- printf "%s" (tpl .Values.auth.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "postgresql.v1.chart.fullname" .) -}}
+{{- end -}}
+{{- end -}}

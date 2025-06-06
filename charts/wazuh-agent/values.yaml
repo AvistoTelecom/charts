@@ -74,15 +74,13 @@ agent:
   ## Wazuh Agent global configuration
   ##
   ## @param agent.configuration.joinManagerMasterHost Ip address or Domain name of Wazuh server using for restapi
-  ## @param agent.configuration.joinManagerWorkerHost Ip address or Domain name of Wazuh worker for agent connection, if using ALL in One installation the same value as for "joinManagerMasterHost"
+  ## @param agent.configuration.joinManagerWorkerHost Ip address or Domain name of Wazuh worker for agent connection, if using ALL in One installation (single node) the same value as for "joinManagerMasterHost"
   ## @param agent.configuration.joinManagerProtocol Http or https protocol for Wazuh restapi
   ## @param agent.configuration.joinManagerApiPort Port where the Wazuh API listened
   ## @param agent.configuration.joinManagerPort Port where the Wazuh Server listened
   ## @param agent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
   ## @param agent.configuration.joinManagerUser.secretKeyRef.name Name of the Kubernetes secret containing the Wazuh API credentials
   ## @param agent.configuration.joinManagerUser.secretKeyRef.key Name of the key in the Kubernetes secret containing the Wazuh API username
-  ## @param agent.configuration.joinManagerPassword.secretKeyRef.name Name of the Kubernetes secret containing the Wazuh API credentials
-  ## @param agent.configuration.joinManagerPassword.secretKeyRef.key Name of the key in the Kubernetes secret containing the Wazuh API password
   configuration:
     joinManagerMasterHost: ""
     joinManagerWorkerHost: ""
@@ -90,14 +88,10 @@ agent:
     joinManagerApiPort: "55000"
     joinManagerPort: "1514"
     wazuhGroups: "default"
-    joinManagerUser:
-      secretKeyRef:
-        name: wazuh-api-cred
-        key: username
-    joinManagerPassword:
-      secretKeyRef:
-        name: wazuh-api-cred
-        key: password
+
+  ## @param agent.existingConfigmap Name of an existing ConfigMap with agent configuration (ossec.conf)
+  ##
+  existingConfigmap: ""
 
   ## @param agent.extraEnvVars Array with extra environment variables to add to Wazuh Agent nodes
   ## e.g:
