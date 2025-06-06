@@ -79,8 +79,6 @@ agent:
   ## @param agent.configuration.joinManagerApiPort Port where the Wazuh API listened
   ## @param agent.configuration.joinManagerPort Port where the Wazuh Server listened
   ## @param agent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
-  ## @param agent.configuration.joinManagerUser.secretKeyRef.name Name of the Kubernetes secret containing the Wazuh API credentials
-  ## @param agent.configuration.joinManagerUser.secretKeyRef.key Name of the key in the Kubernetes secret containing the Wazuh API username
   configuration:
     joinManagerMasterHost: ""
     joinManagerWorkerHost: ""
