@@ -52,8 +52,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
-{{/* 
-Get the agent configuration ConfigMap name. 
+{{/*
+Get the agent configuration ConfigMap name.
 */}}
 {{- define "agent.configmapName" -}}
 {{- if .Values.agent.existingConfigmap -}}
