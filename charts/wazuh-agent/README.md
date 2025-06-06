@@ -25,7 +25,8 @@ helm install my-wazuh-agent avisto/wazuh-agent --version 4.12.0
 The minimal configuration required to run the wazuh agent is to specify the Wazuh server ip address in the `agent.configuration.joinManagerMasterHost` and `agent.configuration.joinManagerWorkerHost` values as well as wazuh api credentials.
 
 The content of the `values.yaml` should be at least :
-```
+
+```yaml
 agent:
   configuration:
     joinManagerMasterHost: <your_wazuh_server_ip>
