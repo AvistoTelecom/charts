@@ -22,7 +22,7 @@ helm install my-wazuh-agent avisto/wazuh-agent --version 4.12.0
 
 ## Configuration
 
-The minimal configuration required to run the wazuh agent is to specify the Wazuh server ip address in the `agent.configuration.joinManagerMasterHost` and `agent.configuration.joinManagerWorkerHost` values as well as wazuh api credentials.
+The minimal configuration required to run the wazuh agent is to specify the Wazuh server ip address in the `agent.configuration.joinManagerMasterHost` value as well as wazuh api credentials.
 
 The content of the `values.yaml` should be at least :
 
@@ -30,14 +30,13 @@ The content of the `values.yaml` should be at least :
 agent:
   configuration:
     joinManagerMasterHost: <your_wazuh_server_ip>
-    joinManagerWorkerHost: <your_wazuh_server_ip>
     username: <your_wazuh_api_username>
     password: <your_wazuh_api_password>
 ```
 
 ### ossec.conf
 
-The wazuh agent needs the /var/ossec/etc/ossec.conf file in order to apply the correct configuration. By default, this file is mounted to the wazuh agent containers as a configmap.
+The wazuh agent needs the `/var/ossec/etc/ossec.conf` file in order to apply the correct configuration. By default, this file is mounted to the wazuh agent containers as a configmap.
 
 #### Overriding the configuration
 
@@ -124,7 +123,7 @@ data:
 ```
 
 Replace WAZUH_SERVER_IP and WAZUH_SERVER_PORT with the values of your Wazuh server.
-Also, the value of `agent.existingConfigmap` must be set to `wazuh-custom-configmap`.
+Also, the value of `agent.existingConfigmap` must be set to `wazuh-custom-configmap` in the `values.yaml` file.
 
 ### Security
 
@@ -137,7 +136,6 @@ Because the role of the wazuh agent is to monitor the activity on the host, the 
 | Name                      | Description                                                                                  | Value           |
 | ------------------------- | -------------------------------------------------------------------------------------------- | --------------- |
 | `global.imagePullSecrets` | Global Docker registry secret names as an array                                              | `[]`            |
-| `global.storageClass`     | Global StorageClass for Persistent Volume(s)                                                 | `""`            |
 | `kubeVersion`             | Override Kubernetes version                                                                  | `""`            |
 | `nameOverride`            | String to partially override common.names.fullname template (will maintain the release name) | `""`            |
 | `fullnameOverride`        | String to fully override common.names.fullname template                                      | `""`            |
@@ -160,8 +158,10 @@ Because the role of the wazuh agent is to monitor the activity on the host, the 
 | `agent.configuration.joinManagerProtocol`   | Http or https protocol for Wazuh restapi                                                                                                                      | `https`                            |
 | `agent.configuration.joinManagerApiPort`    | Port where the Wazuh API listened                                                                                                                             | `55000`                            |
 | `agent.configuration.joinManagerPort`       | Port where the Wazuh Server listened                                                                                                                          | `1514`                             |
+| `agent.configuration.username`              | Username of the Wazuh server API                                                                                                                              | `""`                               |
+| `agent.configuration.password`              | Password of the Wazuh server API                                                                                                                              | `""`                               |
 | `agent.configuration.wazuhGroups`           | Group(s) name comma separated for auto adding agent                                                                                                           | `default`                          |
-| `agent.configuration.configProfile`         | Config profile name comma separated                                                                                                                           | `""`                               |
+| `agent.configuration.configProfile`         | Config profile name comma separated                                                                                                                           | `debian, debian12`                 |
 | `agent.configuration.rootcheck`             | Rootcheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <rootcheck> and end with </rootcheck>                   | `""`                               |
 | `agent.configuration.ciscat`                | Cis-cat configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <wodle name="cis-cat"> and end with </wodle>              | `""`                               |
 | `agent.configuration.osquery`               | Osquery configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <wodle name="osquery"> and end with </wodle>              | `""`                               |

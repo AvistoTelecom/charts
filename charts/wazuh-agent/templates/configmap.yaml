@@ -18,11 +18,9 @@ data:
           <protocol>tcp</protocol>
         </server>
         <config-profile>
-          {{- if .Values.agent.configuration.configProfile }}
-          {{- .Values.agent.configuration.configProfile | nindent 10 }}
-          {{- else }}
-          debian, debian12
-          {{- end }}
+        {{- if .Values.agent.configuration.configProfile }}
+        {{ .Values.agent.configuration.configProfile | indent 2 }}
+        {{- end }}
         </config-profile>
         <notify_time>10</notify_time>
         <time-reconnect>60</time-reconnect>
@@ -30,9 +28,9 @@ data:
         <crypto_method>aes</crypto_method>
         <enrollment>
           <groups>
-            {{- if .Values.agent.configuration.wazuhGroups }}
-            {{- .Values.agent.configuration.wazuhGroups | nindent 12 }}
-            {{- end }}
+          {{- if .Values.agent.configuration.wazuhGroups }}
+          {{ .Values.agent.configuration.wazuhGroups | indent 2 }}
+          {{- end }}
           </groups>
         </enrollment>
       </client>

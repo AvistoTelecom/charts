@@ -12,9 +12,6 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  ## @param global.storageClass Global StorageClass for Persistent Volume(s)
-  ##
-  storageClass: ""
 
 ## @param kubeVersion Override Kubernetes version
 ##
@@ -77,6 +74,8 @@ agent:
   ## @param agent.configuration.joinManagerProtocol Http or https protocol for Wazuh restapi
   ## @param agent.configuration.joinManagerApiPort Port where the Wazuh API listened
   ## @param agent.configuration.joinManagerPort Port where the Wazuh Server listened
+  ## @param agent.configuration.username Username of the Wazuh server API
+  ## @param agent.configuration.password Password of the Wazuh server API
   ## @param agent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
   ## @param agent.configuration.configProfile Config profile name comma separated
   ## @param agent.configuration.rootcheck Rootcheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <rootcheck> and end with </rootcheck>
@@ -94,8 +93,10 @@ agent:
     joinManagerProtocol: "https"
     joinManagerApiPort: "55000"
     joinManagerPort: "1514"
+    username: ""
+    password: ""
     wazuhGroups: "default"
-    configProfile: ""
+    configProfile: "debian, debian12"
     rootcheck: ""
     ciscat: ""
     osquery: ""
