@@ -74,18 +74,38 @@ agent:
   ## Wazuh Agent global configuration
   ##
   ## @param agent.configuration.joinManagerMasterHost Ip address or Domain name of Wazuh server using for restapi
-  ## @param agent.configuration.joinManagerWorkerHost Ip address or Domain name of Wazuh worker for agent connection, if using ALL in One installation (single node) the same value as for "joinManagerMasterHost"
   ## @param agent.configuration.joinManagerProtocol Http or https protocol for Wazuh restapi
   ## @param agent.configuration.joinManagerApiPort Port where the Wazuh API listened
   ## @param agent.configuration.joinManagerPort Port where the Wazuh Server listened
   ## @param agent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
+  ## @param agent.configuration.configProfile Config profile name comma separated
+  ## @param agent.configuration.rootcheck Rootcheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <rootcheck> and end with </rootcheck>
+  ## @param agent.configuration.ciscat Cis-cat configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <wodle name="cis-cat"> and end with </wodle>
+  ## @param agent.configuration.osquery Osquery configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <wodle name="osquery"> and end with </wodle>
+  ## @param agent.configuration.syscollector Syscollector configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <wodle name="syscollector"> and end with </wodle>
+  ## @param agent.configuration.sca Sca configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <sca> and end with </sca>
+  ## @param agent.configuration.syscheck Syscheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <syscheck> and end with </syscheck>
+  ## @param agent.configuration.loganalysis Log analysis configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Could contain multiple <localfile></localfile> blocks
+  ## @param agent.configuration.activeresponse Active response configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <active-response> and end with </active-response>
+  ## @param agent.configuration.logformat Log format configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <logging> and end with </logging>
+  ## @param agent.configuration.additionalconfig Additional configuration of the Wazuh agent (ossec.conf) which is not provided by the previous parameters and formatted as YAML block text.
   configuration:
     joinManagerMasterHost: ""
-    joinManagerWorkerHost: ""
     joinManagerProtocol: "https"
     joinManagerApiPort: "55000"
     joinManagerPort: "1514"
     wazuhGroups: "default"
+    configProfile: ""
+    rootcheck: ""
+    ciscat: ""
+    osquery: ""
+    syscollector: ""
+    sca: ""
+    syscheck: ""
+    loganalysis: ""
+    activeresponse: ""
+    logformat: ""
+    additionalconfig: ""
 
   ## @param agent.existingConfigmap Name of an existing ConfigMap with agent configuration (ossec.conf)
   ##
