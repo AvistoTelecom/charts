@@ -17,11 +17,24 @@ data:
           <port>{{ .Values.agent.configuration.joinManagerPort }}</port>
           <protocol>tcp</protocol>
         </server>
-        <config-profile>debian, debian12</config-profile>
+        <config-profile>
+          {{- if .Values.agent.configuration.configProfile }}
+          {{- .Values.agent.configuration.configProfile | nindent 10 }}
+          {{- else }}
+          debian, debian12
+          {{- end }}
+        </config-profile>
         <notify_time>10</notify_time>
         <time-reconnect>60</time-reconnect>
         <auto_restart>yes</auto_restart>
         <crypto_method>aes</crypto_method>
+        <enrollment>
+          <groups>
+            {{- if .Values.agent.configuration.wazuhGroups }}
+            {{- .Values.agent.configuration.wazuhGroups | nindent 12 }}
+            {{- end }}
+          </groups>
+        </enrollment>
       </client>
 
       <client_buffer>
@@ -31,6 +44,9 @@ data:
         <events_per_second>500</events_per_second>
       </client_buffer>
 
+      {{- if .Values.agent.configuration.rootcheck }}
+      {{ .Values.agent.configuration.rootcheck | nindent 6 }}
+      {{- else }}
       <!-- Policy monitoring -->
       <rootcheck>
         <disabled>no</disabled>
@@ -53,7 +69,11 @@ data:
         <ignore>/var/lib/containerd</ignore>
         <ignore>/var/lib/docker/overlay2</ignore>
       </rootcheck>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.ciscat }}
+      {{ .Values.agent.configuration.ciscat | nindent 6 }}
+      {{- else }}
       <wodle name="cis-cat">
         <disabled>yes</disabled>
         <timeout>1800</timeout>
@@ -63,7 +83,11 @@ data:
         <java_path>wodles/java</java_path>
         <ciscat_path>wodles/ciscat</ciscat_path>
       </wodle>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.osquery }}
+      {{- .Values.agent.configuration.osquery | nindent 6 }}
+      {{- else }}
       <!-- Osquery integration -->
       <wodle name="osquery">
         <disabled>yes</disabled>
@@ -72,7 +96,11 @@ data:
         <config_path>/etc/osquery/osquery.conf</config_path>
         <add_labels>yes</add_labels>
       </wodle>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.syscollector }}
+      {{- .Values.agent.configuration.syscollector | nindent 6 }}
+      {{- else }}
       <!-- System inventory -->
       <wodle name="syscollector">
         <disabled>no</disabled>
@@ -90,14 +118,22 @@ data:
           <max_eps>10</max_eps>
         </synchronization>
       </wodle>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.sca }}
+      {{ .Values.agent.configuration.sca | nindent 6 }}
+      {{- else }}
       <sca>
         <enabled>yes</enabled>
         <scan_on_start>yes</scan_on_start>
         <interval>12h</interval>
         <skip_nfs>yes</skip_nfs>
       </sca>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.syscheck }}
+      {{- .Values.agent.configuration.syscheck | nindent 6 }}
+      {{- else }}
       <!-- File integrity monitoring -->
       <syscheck>
         <disabled>no</disabled>
@@ -149,7 +185,11 @@ data:
           <max_eps>10</max_eps>
         </synchronization>
       </syscheck>
+      {{ end }}
 
+      {{- if .Values.agent.configuration.loganalysis }}
+      {{- .Values.agent.configuration.loganalysis | nindent 6 }}
+      {{- else }}
       <!-- Log analysis -->
       <localfile>
         <log_format>command</log_format>
@@ -170,21 +210,6 @@ data:
         <frequency>360</frequency>
       </localfile>
 
-      <!-- Active response -->
-      <active-response>
-        <disabled>no</disabled>
-        <ca_store>etc/wpk_root.pem</ca_store>
-        <ca_verification>yes</ca_verification>
-      </active-response>
-
-      <!-- Choose between "plain", "json", or "plain,json" for the format of internal logs -->
-      <logging>
-        <log_format>plain</log_format>
-      </logging>
-
-    </ossec_config>
-
-    <ossec_config>
       <localfile>
         <log_format>journald</log_format>
         <location>journald</location>
@@ -199,6 +224,31 @@ data:
         <log_format>syslog</log_format>
         <location>/var/log/dpkg.log</location>
       </localfile>
+      {{ end }}
+
+      {{- if .Values.agent.configuration.activeresponse }}
+      {{- .Values.agent.configuration.activeresponse | nindent 6 }}
+      {{- else }}
+      <!-- Active response -->
+      <active-response>
+        <disabled>no</disabled>
+        <ca_store>etc/wpk_root.pem</ca_store>
+        <ca_verification>yes</ca_verification>
+      </active-response>
+      {{ end }}
+
+      {{- if .Values.agent.configuration.logformat }}
+      {{- .Values.agent.configuration.logformat | nindent 6 }}
+      {{- else }}
+      <!-- Choose between "plain", "json", or "plain,json" for the format of internal logs -->
+      <logging>
+        <log_format>plain</log_format>
+      </logging>
+      {{ end }}
+
+      {{- if .Values.agent.configuration.additionalconfig }}
+      {{- .Values.agent.configuration.additionalconfig | nindent 6 }}
+      {{- end }}
 
     </ossec_config>
 {{- end }}
