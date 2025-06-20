@@ -21,7 +21,7 @@ kubeVersion: ""
 nameOverride: ""
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "wazuh-agent"
+fullnameOverride: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
 clusterDomain: cluster.local
@@ -89,7 +89,7 @@ agent:
   ## @param agent.configuration.logformat Log format configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with <logging> and end with </logging>
   ## @param agent.configuration.additionalconfig Additional configuration of the Wazuh agent (ossec.conf) which is not provided by the previous parameters and formatted as YAML block text.
   configuration:
-    joinManagerMasterHost: "141.94.214.203"
+    joinManagerMasterHost: ""
     joinManagerProtocol: "https"
     joinManagerApiPort: "55000"
     joinManagerPort: "1514"
