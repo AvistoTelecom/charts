@@ -27,11 +27,7 @@ data:
         <auto_restart>yes</auto_restart>
         <crypto_method>aes</crypto_method>
         <enrollment>
-          <groups>
-          {{- if .Values.agent.configuration.wazuhGroups }}
-          {{ .Values.agent.configuration.wazuhGroups | indent 2 }}
-          {{- end }}
-          </groups>
+          <groups>{{- if .Values.agent.configuration.wazuhGroups }}{{ .Values.agent.configuration.wazuhGroups }}{{- end }}</groups>
         </enrollment>
       </client>
 

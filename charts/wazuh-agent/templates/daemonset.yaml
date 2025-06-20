@@ -122,7 +122,7 @@ spec:
             - mountPath: /host/var/log
               name: log
               readOnly: true
-            - mountpath: /var/ossec/etc/ossec.conf
+            - mountPath: /var/ossec/etc/ossec.conf
               name: wazuh-agent-conf
               subPath: ossec.conf
             {{- if .Values.agent.extraVolumeMounts }}
