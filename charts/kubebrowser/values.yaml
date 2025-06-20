@@ -67,7 +67,7 @@ server:
   image:
     registry: "ghcr.io"
     repository: avistotelecom/kubebrowser
-    tag: "0.8.0"
+    tag: "0.8.1"
     digest: ""
     ## Specify a pullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
