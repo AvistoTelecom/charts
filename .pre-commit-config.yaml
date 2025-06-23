@@ -34,6 +34,10 @@ repos:
         pass_filenames: false
         always_run: true
         args: [--readme=charts/raw/README.md, --values=charts/raw/values.yaml]
+      - id: helm-readme-generator
+        pass_filenames: false
+        always_run: true
+        args: [--readme=charts/wazuh-agent/README.md, --values=charts/wazuh-agent/values.yaml]
   - repo: local
     hooks:
       - id: check-app-version

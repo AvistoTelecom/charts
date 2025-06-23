@@ -1,0 +1,219 @@
+# Default values for agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## @section Global values
+## Please, note that this will override the parameters, including dependencies, configured to use the global value
+##
+global:
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
+  ## e.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+
+## @param kubeVersion Override Kubernetes version
+##
+kubeVersion: ""
+## @param nameOverride String to partially override common.names.fullname template (will maintain the release name)
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: ""
+## @param clusterDomain Kubernetes Cluster Domain
+##
+clusterDomain: cluster.local
+## @param commonLabels Add labels to all the deployed resources
+##
+commonLabels: {}
+## @param commonAnnotations Add annotations to all the deployed resources
+##
+commonAnnotations: {}
+
+## @section Wazuh Agent values
+##
+agent:
+  ## @param agent.name Name of the Wazuh Agent
+  ##
+  name: wazuh-agent
+
+  ## Wazuh Agent image version
+  ## @param agent.image.registry Wazuh Agent image registry
+  ## @param agent.image.repository Wazuh Agent image repository
+  ## @param agent.image.tag Wazuh Agent image tag (immutable tags are recommended)
+  ## @param agent.image.digest Wazuh Agent image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param agent.image.pullPolicy Wazuh Agent image pull policy
+  ## @param agent.image.pullSecrets Specify image pull secrets
+  ##
+  image:
+    registry: "ghcr.io"
+    repository: avistotelecom/docker-wazuh-agent
+    tag: "4.12.0"
+    digest: ""
+
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## Example:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+
+  ## Wazuh Agent global configuration
+  ##
+  ## @param agent.configuration.joinManagerMasterHost Ip address or Domain name of Wazuh server using for restapi
+  ## @param agent.configuration.joinManagerProtocol Http or https protocol for Wazuh restapi
+  ## @param agent.configuration.joinManagerApiPort Port where the Wazuh API listened
+  ## @param agent.configuration.joinManagerPort Port where the Wazuh Server listened
+  ## @param agent.configuration.username Username of the Wazuh server API
+  ## @param agent.configuration.password Password of the Wazuh server API
+  ## @param agent.configuration.wazuhGroups Group(s) name comma separated for auto adding agent
+  ## @param agent.configuration.configProfile Config profile name comma separated
+  ## @param agent.configuration.rootcheck Rootcheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<rootcheck>` and end with `</rootcheck>`
+  ## @param agent.configuration.ciscat Cis-cat configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name="cis-cat">` and end with `</wodle>`
+  ## @param agent.configuration.osquery Osquery configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name="osquery">` and end with `</wodle>`
+  ## @param agent.configuration.syscollector Syscollector configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name="syscollector">` and end with `</wodle>`
+  ## @param agent.configuration.sca Sca configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<sca>` and end with `</sca>`
+  ## @param agent.configuration.syscheck Syscheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<syscheck>` and end with `</syscheck>`
+  ## @param agent.configuration.loganalysis Log analysis configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Could contain multiple `<localfile></localfile>` blocks
+  ## @param agent.configuration.activeresponse Active response configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<active-response>` and end with `</active-response>`
+  ## @param agent.configuration.logformat Log format configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<logging>` and end with `</logging>`
+  ## @param agent.configuration.additionalconfig Additional configuration of the Wazuh agent (ossec.conf) which is not provided by the previous parameters and formatted as YAML block text.
+  configuration:
+    joinManagerMasterHost: ""
+    joinManagerProtocol: "https"
+    joinManagerApiPort: "55000"
+    joinManagerPort: "1514"
+    username: ""
+    password: ""
+    wazuhGroups: "default"
+    configProfile: "debian, debian12"
+    rootcheck: ""
+    ciscat: ""
+    osquery: ""
+    syscollector: ""
+    sca: ""
+    syscheck: ""
+    loganalysis: ""
+    activeresponse: ""
+    logformat: ""
+    additionalconfig: ""
+
+  ## @param agent.existingConfigmap Name of an existing ConfigMap with agent configuration (ossec.conf)
+  ##
+  existingConfigmap: ""
+
+  ## @param agent.extraEnvVars Array with extra environment variables to add to Wazuh Agent nodes
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
+
+  ## @param agent.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for Wazuh Agent nodes
+  ##
+  extraEnvVarsCM: ""
+
+  ## @param agent.extraEnvVarsSecret Name of existing Secret containing extra env vars for Wazuh Agent nodes
+  ##
+  extraEnvVarsSecret: ""
+
+  ## @param agent.command Override default container command (useful when using custom images)
+  ##
+  command: []
+
+  ## @param agent.args Override default container args (useful when using custom images)
+  ##
+  args: []
+
+  ## Configure extra options for Wazuh Agent containers' liveness, readiness and startup probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  ## @param agent.livenessProbe.enabled Enable livenessProbe on Wazuh Agent containers
+  ## @param agent.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param agent.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param agent.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param agent.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 5
+
+  ## @param agent.readinessProbe.enabled Enable readinessProbe on Wazuh Agent containers
+  ## @param agent.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param agent.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param agent.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param agent.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 5
+
+  ## Wazuh Agent resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param agent.resources.limits The resources limits for the Wazuh Agent containers
+  ## @param agent.resources.requests The requested resources for the Wazuh Agent containers
+  ##
+  resources:
+    limits: {}
+    requests: {}
+
+  ## Container Security Context
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  ## @param agent.containerSecurityContext.enabled Enable container security context
+  containerSecurityContext:
+    enabled: true
+
+  ## @param agent.containerPorts.http Wazuh Agent container port for http
+  ##
+  containerPorts:
+    http: 5000
+
+  ## @param agent.labels Map of labels to add to the daemonset
+  ##
+  labels: {}
+  ## @param agent.annotations Annotations for Wazuh Agent primary pods
+  ##
+  annotations: {}
+  ## @param agent.podLabels Map of labels to add to the pods
+  ##
+  podLabels: {}
+  ## @param agent.podAnnotations Map of annotations to add to the pods
+  ##
+  podAnnotations: {}
+
+  ## @extra agent.updateStrategy Wazuh Agent daemonset update strategy
+  ## @param agent.updateStrategy.type Wazuh Agent daemonset update strategy type
+  ## @param agent.updateStrategy.rollingUpdate Wazuh Agent daemonset update strategy parameters
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/#updating-a-daemonset
+  ##
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate: {}
+
+  ## @param agent.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Wazuh Agent container(s)
+  ##
+  extraVolumeMounts: []
+
+  ## @param agent.extraVolumes Optionally specify extra list of additional volumes for the Wazuh Agent pod(s)
+  ##
+  extraVolumes: []
+
+  ## @param agent.extraPodSpec Optionally specify extra PodSpec for the Wazuh Agent pod(s)
+  ##
+  extraPodSpec: {}

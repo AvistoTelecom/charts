@@ -1,0 +1,167 @@
+apiVersion: {{ include "common.capabilities.daemonset.apiVersion" . }}
+kind: DaemonSet
+metadata:
+  name: {{ include "agent.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.agent.labels .Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+spec:
+  {{- if .Values.agent.updateStrategy }}
+  updateStrategy: {{- toYaml .Values.agent.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.agent.podLabels .Values.commonLabels ) "context" . ) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+      app: {{ include "agent.fullname" . }}
+  template:
+    metadata:
+      name: {{ include "agent.fullname" . }}
+      labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+        app: {{ include "agent.fullname" . }}
+      annotations:
+        {{- if .Values.agent.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.agent.podAnnotations "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.extraPodSpec }}
+      {{- include "common.tplvalues.render" (dict "value" .Values.agent.extraPodSpec "context" $) | indent 6 }}
+      {{- end }}
+      hostPID: true
+      hostIPC: true
+      {{- if .Values.agent.image.pullSecrets }}
+      imagePullSecrets: {{- include "common.tplvalues.render" (dict "value" .Values.agent.image.pullSecrets "context" $) | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: {{ include "agent.fullname" . }}
+          image: {{ include "agent.image" . }}
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy | quote }}
+          {{- if .Values.agent.containerSecurityContext.enabled }}
+          securityContext:
+            privileged: true
+          {{- end }}
+          {{- if .Values.agent.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.agent.command "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.agent.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.agent.args "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.agent.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.agent.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthcheck
+              port: {{ .Values.agent.containerPorts.http }}
+          {{- end }}
+          {{- if .Values.agent.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.agent.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /healthcheck
+              port: {{ .Values.agent.containerPorts.http }}
+          {{- end }}
+          ports:
+            - name: agent-http
+              containerPort: {{ .Values.agent.containerPorts.http }}
+              protocol: TCP
+          {{- if .Values.agent.resources }}
+          resources: {{- toYaml .Values.agent.resources | nindent 12 }}
+          {{- end }}
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: JOIN_MANAGER_MASTER_HOST
+              value: {{ .Values.agent.configuration.joinManagerMasterHost | quote }}
+            - name: JOIN_MANAGER_PROTOCOL
+              value: {{ .Values.agent.configuration.joinManagerProtocol | quote }}
+            - name: JOIN_MANAGER_API_PORT
+              value: {{ .Values.agent.configuration.joinManagerApiPort | quote }}
+            - name: JOIN_MANAGER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "agent.fullname" . }}-api-cred
+                  key: username
+            - name: JOIN_MANAGER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "agent.fullname" . }}-api-cred
+                  key: password
+          {{- if .Values.agent.extraEnvVars }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.agent.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /var/run
+              name: var-run
+              readOnly: true
+            - mountPath: /host/dev
+              name: dev
+              readOnly: true
+            - mountPath: /host/sys
+              name: sys
+              readOnly: true
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/etc
+              name: etc
+              readOnly: true
+            - mountPath: /var/run/docker.sock
+              name: docker-socket-mount
+              readOnly: true
+            - mountPath: /host/var/run/docker.sock
+              name: docker-socket-mount
+              readOnly: true
+            - mountPath: /host/boot
+              name: boot
+              readOnly: true
+            - mountPath: /host/usr
+              name: usr
+              readOnly: true
+            - mountPath: /host/lib/modules
+              name: modules
+              readOnly: true
+            - mountPath: /host/var/log
+              name: log
+              readOnly: true
+            - mountPath: /var/ossec/etc/ossec.conf
+              name: wazuh-agent-conf
+              subPath: ossec.conf
+            {{- if .Values.agent.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.agent.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: docker-socket-mount
+          hostPath:
+            path: /var/run/docker.sock
+        - name: var-run
+          hostPath:
+            path: /var/run
+        - name: dev
+          hostPath:
+            path: /dev
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: boot
+          hostPath:
+            path: /boot
+        - name: usr
+          hostPath:
+            path: /usr
+        - name: modules
+          hostPath:
+            path: /lib/modules
+        - name: log
+          hostPath:
+            path: /var/
+        - name: wazuh-agent-conf
+          configMap:
+            name: {{ include "agent.configmapName" . }}
+        {{- if .Values.agent.extraVolumes }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.agent.extraVolumes "context" $ ) | nindent 8 }}
+        {{- end }}
