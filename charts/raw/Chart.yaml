@@ -8,5 +8,9 @@ keywords:
 maintainers:
   - name: Brawdunoir
     email: yann.lacroix@avisto.com
-version: 1.0.0
+version: 1.0.1
 kubeVersion: ">=1.16.0-0"
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+    url: https://keybase.io/avistotelecom/pgp_keys.asc

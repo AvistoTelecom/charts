@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubebrowser
 description: Allow whitelisted people to access your kubeconfigs
 type: application
-version: "1.1.4"
+version: "1.1.5"
 appVersion: "0.8.2"
 dependencies:
   - name: common
@@ -12,3 +12,7 @@ maintainers:
   - name: Brawdunoir
     email: yann.lacroix@avisto.com
 icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+    url: https://keybase.io/avistotelecom/pgp_keys.asc

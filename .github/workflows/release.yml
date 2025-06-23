@@ -15,6 +15,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_KEYRING_BASE64 }}" | gpg --dearmor --output keyring.gpg
+          echo "${{ secrets.GPG_PASSPHRASE }}" > passphrase-file.txt
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -24,3 +29,7 @@ jobs:
         uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_SIGN: true
+          CR_KEY: AvistoTelecom
+          CR_KEYRING: keyring.gpg
+          CR_PASSPHRASE_FILE: passphrase-file.txt
