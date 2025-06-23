@@ -1,6 +1,28 @@
 apiVersion: v1
 entries:
   kubebrowser:
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 0.8.2
+    created: "2025-06-23T15:38:11.025585256Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Allow whitelisted people to access your kubeconfigs
+    digest: 83631dff03bb54a5a2e37670da621d85785bad886d2874381c9ce91d0c6ecd8b
+    icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: kubebrowser
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.1.5/kubebrowser-1.1.5.tgz
+    version: 1.1.5
   - apiVersion: v2
     appVersion: 0.8.2
     created: "2025-06-20T12:41:08.98062938Z"
@@ -142,6 +164,27 @@ entries:
     - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.0.0/kubebrowser-1.0.0.tgz
     version: 1.0.0
   raw:
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    created: "2025-06-23T15:38:11.189130415Z"
+    description: A place for all the Kubernetes resources which don't already have
+      a home
+    digest: 4cdd4bc79302dd35daae965622a8b4e61242c9f634ef34537f143ecea7267718
+    keywords:
+    - raw
+    - incubator
+    - incubator-raw
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: raw
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.1/raw-1.0.1.tgz
+    version: 1.0.1
   - apiVersion: v2
     created: "2025-06-04T13:38:08.655809333Z"
     description: A place for all the Kubernetes resources which don't already have
@@ -160,6 +203,27 @@ entries:
     - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
   wazuh-agent:
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 4.12.0
+    created: "2025-06-23T15:38:11.360189031Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Wazuh Agent Helm chart for Kubernetes
+    digest: da07ae7d3b036364467eb80ad2a79efc2d070af822554a35cdc8a1e81c8427de
+    maintainers:
+    - email: kylian.le-saux@avisto.com
+      name: KylianLeSaux
+    name: wazuh-agent
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.1/wazuh-agent-4.12.1.tgz
+    version: 4.12.1
   - apiVersion: v2
     appVersion: 4.12.0
     created: "2025-06-23T09:24:49.060562848Z"
@@ -177,4 +241,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2025-06-23T09:24:49.06058536Z"
+generated: "2025-06-23T15:38:11.360229378Z"
