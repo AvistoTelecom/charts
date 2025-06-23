@@ -159,4 +159,22 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2025-06-20T12:41:08.980659987Z"
+  wazuh-agent:
+  - apiVersion: v2
+    appVersion: 4.12.0
+    created: "2025-06-23T09:24:49.060562848Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Wazuh Agent Helm chart for Kubernetes
+    digest: 1bfe56a41c6892cce1b221df558c7a546ff2409e51b23f5ffc0f78e046e523bb
+    maintainers:
+    - email: kylian.le-saux@avisto.com
+      name: KylianLeSaux
+    name: wazuh-agent
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
+    version: 4.12.0
+generated: "2025-06-23T09:24:49.06058536Z"
