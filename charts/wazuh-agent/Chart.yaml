@@ -11,3 +11,7 @@ dependencies:
 maintainers:
   - name: KylianLeSaux
     email: kylian.le-saux@avisto.com
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+    url: https://keybase.io/avistotelecom/pgp_keys.asc
