@@ -10,3 +10,11 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
+maintainers:
+  - name: Brawdunoir
+    email: yann.lacroix@avisto.com
+icon: https://github.com/dbeaver/cloudbeaver/wiki/images/cloudbeaver-head.png
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+    url: https://keybase.io/avistotelecom/pgp_keys.asc
