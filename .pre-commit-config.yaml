@@ -37,7 +37,19 @@ repos:
       - id: helm-readme-generator
         pass_filenames: false
         always_run: true
-        args: [--readme=charts/wazuh-agent/README.md, --values=charts/wazuh-agent/values.yaml]
+        args:
+          [
+            --readme=charts/wazuh-agent/README.md,
+            --values=charts/wazuh-agent/values.yaml,
+          ]
+      - id: helm-readme-generator
+        pass_filenames: false
+        always_run: true
+        args:
+          [
+            --readme=charts/cloudbeaver/README.md,
+            --values=charts/cloudbeaver/values.yaml,
+          ]
   - repo: local
     hooks:
       - id: check-app-version

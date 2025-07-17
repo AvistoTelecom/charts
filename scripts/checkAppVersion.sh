@@ -29,6 +29,7 @@ declare -A CHART_PATHS
 CHART_PATHS["kubebrowser"]="server.image.tag"
 CHART_PATHS["raw"]=""
 CHART_PATHS["wazuh-agent"]="agent.image.tag"
+CHART_PATHS["cloudbeaver"]="image.tag"
 # Add more as needed, space-separated for multiple paths
 
 failed=0
