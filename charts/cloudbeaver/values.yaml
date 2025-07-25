@@ -99,6 +99,32 @@ command: []
 ## @param args Override cloudbeaver default args
 ##
 args: []
+## Configure extra options for cloudbeaver server containers' liveness, readiness and startup probes
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+## @param livenessProbe.enabled Enable livenessProbe on cloudbeaver server containers
+## @param livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+## @param livenessProbe.periodSeconds Period seconds for livenessProbe
+## @param livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+## @param livenessProbe.failureThreshold Failure threshold for livenessProbe
+##
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 5
+## @param readinessProbe.enabled Enable readinessProbe on cloudbeaver server containers
+## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+## @param readinessProbe.periodSeconds Period seconds for readinessProbe
+## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
+##
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 5
 ## @param initContainers Attach additional init containers to the pod (evaluated as a template)
 ##
 initContainers: []
