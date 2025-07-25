@@ -59,6 +59,16 @@ helm install my-cloudbeaver avisto/cloudbeaver
 | `updateStrategy.type`                               | defaults to Recreate because of ReadWriteOnce PVC AccessMode                                                      | `Recreate`            |
 | `command`                                           | Override cloudbeaver default command                                                                              | `[]`                  |
 | `args`                                              | Override cloudbeaver default args                                                                                 | `[]`                  |
+| `livenessProbe.enabled`                             | Enable livenessProbe on cloudbeaver server containers                                                             | `true`                |
+| `livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                                           | `60`                  |
+| `livenessProbe.periodSeconds`                       | Period seconds for livenessProbe                                                                                  | `5`                   |
+| `livenessProbe.timeoutSeconds`                      | Timeout seconds for livenessProbe                                                                                 | `1`                   |
+| `livenessProbe.failureThreshold`                    | Failure threshold for livenessProbe                                                                               | `5`                   |
+| `readinessProbe.enabled`                            | Enable readinessProbe on cloudbeaver server containers                                                            | `true`                |
+| `readinessProbe.initialDelaySeconds`                | Initial delay seconds for readinessProbe                                                                          | `5`                   |
+| `readinessProbe.periodSeconds`                      | Period seconds for readinessProbe                                                                                 | `5`                   |
+| `readinessProbe.timeoutSeconds`                     | Timeout seconds for readinessProbe                                                                                | `1`                   |
+| `readinessProbe.failureThreshold`                   | Failure threshold for readinessProbe                                                                              | `5`                   |
 | `initContainers`                                    | Attach additional init containers to the pod (evaluated as a template)                                            | `[]`                  |
 | `dnsPolicy`                                         | Specifies the DNS policy for the cloudbeaver deployment                                                           | `""`                  |
 | `dnsConfig`                                         | allows users more control on the DNS settings for a Pod. Required if `dnsPolicy` is set to `None`                 | `{}`                  |

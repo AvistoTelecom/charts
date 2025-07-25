@@ -97,6 +97,18 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /#/api/gql
+              port: {{ .Values.containerPorts.http }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /#/api/gql
+              port: {{ .Values.containerPorts.http }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPorts.http }}
