@@ -19,6 +19,7 @@ jobs:
       - name: Find changed charts
         id: changed
         run: |
+          git fetch origin ${{ github.base_ref }}
           echo "charts=$(git diff --name-only origin/${{ github.base_ref }} | grep '^charts/[^/\n]*/' | cut -d/ -f2 | sort -u | xargs)" >> $GITHUB_OUTPUT
       - name: Install and test changed charts
         if: steps.changed.outputs.charts != ''
