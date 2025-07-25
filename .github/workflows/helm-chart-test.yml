@@ -1,0 +1,39 @@
+name: Helm Chart Test
+
+on:
+  pull_request:
+    paths:
+      - "charts/**"
+
+jobs:
+  helm-test:
+    runs-on: ubuntu-latest
+    env:
+      HELM_VERSION: v3.14.4
+      MINIKUBE_VERSION: v1.33.1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Minikube
+        uses: medyagh/setup-minikube@latest
+        with:
+          minikube-version: ${{ env.MINIKUBE_VERSION }}
+          driver: docker
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Find changed charts
+        id: changed
+        run: |
+          echo "charts=$(git diff --name-only origin/${{ github.base_ref }} | grep '^charts/[^/\n]*/' | cut -d/ -f2 | sort -u | xargs)" >> $GITHUB_OUTPUT
+      - name: Install and test changed charts
+        if: steps.changed.outputs.charts != ''
+        run: |
+          for chart in ${{ steps.changed.outputs.charts }}; do
+            echo "Testing chart: $chart"
+            helm dependency update charts/$chart || true
+            helm install --wait --generate-name charts/$chart
+            helm test $(helm list -q | grep $chart)
+            helm uninstall $(helm list -q | grep $chart)
+          done
