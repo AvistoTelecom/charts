@@ -63,7 +63,7 @@ kubeVersion: ""
 image:
   registry: docker.io
   repository: dbeaver/cloudbeaver
-  tag: 25.2.0
+  tag: 25.2.1
   digest: ""
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images

@@ -2,8 +2,8 @@ apiVersion: v2
 name: cloudbeaver
 description: Cloud Database Manager
 type: application
-version: 1.0.5
-appVersion: 25.2.0
+version: 1.0.6
+appVersion: 25.2.1
 dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
