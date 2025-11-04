@@ -1,0 +1,625 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imageRegistry": {
+                    "type": "string",
+                    "description": "Global Docker image registry",
+                    "default": ""
+                },
+                "imagePullPolicy": {
+                    "type": "string",
+                    "description": "kubebrowser image pull policy",
+                    "default": ""
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "Global Docker registry secret names as an array",
+                    "default": [],
+                    "items": {}
+                },
+                "storageClass": {
+                    "type": "string",
+                    "description": "Global StorageClass for Persistent Volume(s)",
+                    "default": ""
+                },
+                "observability": {
+                    "type": "object",
+                    "properties": {
+                        "otlpExporterEndpoint": {
+                            "type": "string",
+                            "description": "OTLP exporter endpoint (overrides *.observability.otlpExporterEndpoint for all components)",
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        },
+        "kubeVersion": {
+            "type": "string",
+            "description": "Override Kubernetes version",
+            "default": ""
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "String to partially override common.names.fullname template (will maintain the release name)",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "String to fully override common.names.fullname template",
+            "default": ""
+        },
+        "clusterDomain": {
+            "type": "string",
+            "description": "Kubernetes Cluster Domain",
+            "default": "cluster.local"
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Add labels to all the deployed resources",
+            "default": {}
+        },
+        "commonAnnotations": {
+            "type": "object",
+            "description": "Add annotations to all the deployed resources",
+            "default": {}
+        },
+        "server": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the server",
+                    "default": "server"
+                },
+                "replicaCount": {
+                    "type": "number",
+                    "description": "Number of kubebrowser server replicas",
+                    "default": 1
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string",
+                            "description": "server image registry",
+                            "default": "ghcr.io"
+                        },
+                        "repository": {
+                            "type": "string",
+                            "description": "server image repository",
+                            "default": "avistotelecom/kubebrowser"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "server image tag (immutable tags are recommended)",
+                            "default": "0.8.3"
+                        },
+                        "digest": {
+                            "type": "string",
+                            "description": "server image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag",
+                            "default": ""
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "description": "server image pull policy",
+                            "default": ""
+                        },
+                        "pullSecrets": {
+                            "type": "array",
+                            "description": "Specify image pull secrets for server",
+                            "default": [],
+                            "items": {}
+                        }
+                    }
+                },
+                "oidc": {
+                    "type": "object",
+                    "properties": {
+                        "clientID": {
+                            "type": "string",
+                            "description": "Client ID of your application",
+                            "default": ""
+                        },
+                        "clientSecret": {
+                            "type": "string",
+                            "description": "Client secret of your application",
+                            "default": ""
+                        },
+                        "issuerURL": {
+                            "type": "string",
+                            "description": "Issuer URL of your OIDC provider (e.g. https://login.microsoftonline.com/<tenant_id>/v2.0)",
+                            "default": ""
+                        }
+                    }
+                },
+                "ui": {
+                    "type": "object",
+                    "properties": {
+                        "existingConfigmap": {
+                            "type": "string",
+                            "description": "Override generated config.js for the UI.",
+                            "default": ""
+                        },
+                        "helpPage": {
+                            "type": "string",
+                            "description": "Upper right link on the UI to help users to use a Kubeconfig",
+                            "default": "https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/"
+                        }
+                    }
+                },
+                "logLevel": {
+                    "type": "string",
+                    "description": "Log level of the server",
+                    "default": "INFO"
+                },
+                "serviceAccountName": {
+                    "type": "string",
+                    "description": "Service account to use",
+                    "default": "kubebrowser"
+                },
+                "extraEnvVars": {
+                    "type": "array",
+                    "description": "Array with extra environment variables to add to kubebrowser server nodes",
+                    "default": [],
+                    "items": {}
+                },
+                "extraEnvVarsCM": {
+                    "type": "string",
+                    "description": "Name of existing ConfigMap containing extra env vars for kubebrowser server nodes",
+                    "default": ""
+                },
+                "extraEnvVarsSecret": {
+                    "type": "string",
+                    "description": "Name of existing Secret containing extra env vars for kubebrowser server nodes",
+                    "default": ""
+                },
+                "command": {
+                    "type": "array",
+                    "description": "Override default container command (useful when using custom images)",
+                    "default": [],
+                    "items": {}
+                },
+                "args": {
+                    "type": "array",
+                    "description": "Override default container args (useful when using custom images)",
+                    "default": [],
+                    "items": {}
+                },
+                "livenessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable livenessProbe on kubebrowser server containers",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay seconds for livenessProbe",
+                            "default": 5
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period seconds for livenessProbe",
+                            "default": 5
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout seconds for livenessProbe",
+                            "default": 1
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for livenessProbe",
+                            "default": 3
+                        }
+                    }
+                },
+                "readinessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable readinessProbe on kubebrowser server containers",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay seconds for readinessProbe",
+                            "default": 5
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period seconds for readinessProbe",
+                            "default": 5
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout seconds for readinessProbe",
+                            "default": 1
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for readinessProbe",
+                            "default": 5
+                        }
+                    }
+                },
+                "lifecycleHooks": {
+                    "type": "object",
+                    "description": "for the kubebrowser server container to automate configuration before or after startup",
+                    "default": {}
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "description": "The resources limits for the kubebrowser server containers",
+                            "default": {}
+                        },
+                        "requests": {
+                            "type": "object",
+                            "description": "The requested resources for the kubebrowser server containers",
+                            "default": {}
+                        }
+                    }
+                },
+                "podSecurityContext": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable security context",
+                            "default": true
+                        },
+                        "fsGroup": {
+                            "type": "number",
+                            "description": "Group ID for the pod",
+                            "default": 101
+                        }
+                    }
+                },
+                "containerSecurityContext": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable container security context",
+                            "default": true
+                        },
+                        "runAsUser": {
+                            "type": "number",
+                            "description": "User ID for the container",
+                            "default": 101
+                        },
+                        "runAsGroup": {
+                            "type": "number",
+                            "description": "Group ID for the container",
+                            "default": 0
+                        },
+                        "runAsNonRoot": {
+                            "type": "boolean",
+                            "description": "Set runAsNonRoot for the container",
+                            "default": true
+                        },
+                        "allowPrivilegeEscalation": {
+                            "type": "boolean",
+                            "description": "Set allowPrivilegeEscalation for the container",
+                            "default": false
+                        },
+                        "seccompProfile": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "description": "Set seccompProfile.type for the container",
+                                    "default": "RuntimeDefault"
+                                }
+                            }
+                        },
+                        "capabilities": {
+                            "type": "object",
+                            "properties": {
+                                "drop": {
+                                    "type": "array",
+                                    "description": "Set capabilities.drop for the container",
+                                    "default": [
+                                        "ALL"
+                                    ],
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "hostAliases": {
+                    "type": "array",
+                    "description": "kubebrowser server pods host aliases",
+                    "default": [],
+                    "items": {}
+                },
+                "hostNetwork": {
+                    "type": "boolean",
+                    "description": "Specify if host network should be enabled for kubebrowser pod",
+                    "default": false
+                },
+                "containerPorts": {
+                    "type": "object",
+                    "properties": {
+                        "http": {
+                            "type": "number",
+                            "description": "kubebrowser server container port for http",
+                            "default": 8080
+                        }
+                    }
+                },
+                "hostIPC": {
+                    "type": "boolean",
+                    "description": "Specify if host IPC should be enabled for kubebrowser pod",
+                    "default": false
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Map of labels to add to the statefulset",
+                    "default": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Annotations for server pods",
+                    "default": {}
+                },
+                "podLabels": {
+                    "type": "object",
+                    "description": "Map of labels to add to the pods",
+                    "default": {}
+                },
+                "podAnnotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the pods",
+                    "default": {}
+                },
+                "priorityClassName": {
+                    "type": "string",
+                    "description": "Priority Class to use for each pod",
+                    "default": ""
+                },
+                "schedulerName": {
+                    "type": "string",
+                    "description": "Use an alternate scheduler, e.g. \"stork\".",
+                    "default": ""
+                },
+                "terminationGracePeriodSeconds": {
+                    "type": "string",
+                    "description": "Seconds kubebrowser server pod needs to terminate gracefully",
+                    "default": ""
+                },
+                "strategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "kubebrowser server deployment strategy type",
+                            "default": "RollingUpdate"
+                        }
+                    }
+                },
+                "extraVolumeMounts": {
+                    "type": "array",
+                    "description": "Optionally specify extra list of additional volumeMounts for the kubebrowser server container(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "extraVolumes": {
+                    "type": "array",
+                    "description": "Optionally specify extra list of additional volumes for the kubebrowser server pod(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "sidecars": {
+                    "type": "array",
+                    "description": "Add additional sidecar containers to the kubebrowser server pod(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "initContainers": {
+                    "type": "array",
+                    "description": "Add additional init containers to the kubebrowser server pod(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "extraPodSpec": {
+                    "type": "object",
+                    "description": "Optionally specify extra PodSpec for the kubebrowser server pod(s)",
+                    "default": {}
+                },
+                "affinity": {
+                    "type": "object",
+                    "description": "Affinity for server",
+                    "default": {}
+                },
+                "nodeSelector": {
+                    "type": "object",
+                    "description": "Node labels for kubebrowser server pods assignment",
+                    "default": {}
+                },
+                "tolerations": {
+                    "type": "array",
+                    "description": "Tolerations for kubebrowser server pods assignment",
+                    "default": [],
+                    "items": {}
+                },
+                "topologySpreadConstraints": {
+                    "type": "array",
+                    "description": "Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template",
+                    "default": [],
+                    "items": {}
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "type": "boolean",
+                            "description": "Enable creation of Service for kubebrowser server pod",
+                            "default": true
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "Kubernetes Service type",
+                            "default": "ClusterIP"
+                        },
+                        "nodePorts": {
+                            "type": "object",
+                            "properties": {
+                                "http": {
+                                    "type": "string",
+                                    "description": "Node port for kubebrowser server http traffic",
+                                    "default": ""
+                                }
+                            }
+                        },
+                        "clusterIP": {
+                            "type": "string",
+                            "description": "Static clusterIP or None for headless services",
+                            "default": ""
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "description": "Annotations for kubebrowser server service",
+                            "default": {}
+                        },
+                        "loadBalancerIP": {
+                            "type": "string",
+                            "description": "Load balancer IP if service type is `LoadBalancer`",
+                            "default": ""
+                        },
+                        "externalTrafficPolicy": {
+                            "type": "string",
+                            "description": "Enable client source IP preservation",
+                            "default": "Cluster"
+                        },
+                        "loadBalancerSourceRanges": {
+                            "type": "array",
+                            "description": "Addresses that are allowed when service is LoadBalancer",
+                            "default": [],
+                            "items": {}
+                        },
+                        "extraPorts": {
+                            "type": "array",
+                            "description": "Extra ports to expose in the kubebrowser server service",
+                            "default": [],
+                            "items": {}
+                        },
+                        "sessionAffinity": {
+                            "type": "string",
+                            "description": "Session Affinity for Kubernetes service, can be \"None\" or \"ClientIP\"",
+                            "default": "None"
+                        },
+                        "sessionAffinityConfig": {
+                            "type": "object",
+                            "description": "Additional settings for the sessionAffinity",
+                            "default": {}
+                        },
+                        "headless": {
+                            "type": "object",
+                            "properties": {
+                                "annotations": {
+                                    "type": "object",
+                                    "description": "Additional custom annotations for headless kubebrowser server service",
+                                    "default": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "ingress": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable ingress controller resource for frontend",
+                    "default": false
+                },
+                "apiVersion": {
+                    "type": "string",
+                    "description": "Force Ingress API version (automatically detected if not set)",
+                    "default": ""
+                },
+                "ingressClassName": {
+                    "type": "string",
+                    "description": "IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)",
+                    "default": ""
+                },
+                "hostname": {
+                    "type": "string",
+                    "description": "Default host for the ingress resource",
+                    "default": "kubebrowser.local"
+                },
+                "pathType": {
+                    "type": "string",
+                    "description": "Ingress path type",
+                    "default": "ImplementationSpecific"
+                },
+                "path": {
+                    "type": "string",
+                    "description": "Ingress path",
+                    "default": "/"
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.",
+                    "default": {}
+                },
+                "tls": {
+                    "type": "boolean",
+                    "description": "Enable TLS configuration for the hostname defined at `ingress.hostname` parameter",
+                    "default": false
+                },
+                "selfSigned": {
+                    "type": "boolean",
+                    "description": "Create a TLS secret for this ingress record using self-signed certificates generated by Helm",
+                    "default": false
+                },
+                "extraHosts": {
+                    "type": "array",
+                    "description": "The list of additional hostnames to be covered with this ingress record.",
+                    "default": [],
+                    "items": {}
+                },
+                "extraPaths": {
+                    "type": "array",
+                    "description": "Any additional paths that may need to be added to the ingress under all hosts",
+                    "default": [],
+                    "items": {}
+                },
+                "extraTls": {
+                    "type": "array",
+                    "description": "The tls configuration for additional hostnames to be covered with this ingress record.",
+                    "default": [],
+                    "items": {}
+                },
+                "secrets": {
+                    "type": "array",
+                    "description": "If you're providing your own certificates, please use this to add the certificates as secrets",
+                    "default": [],
+                    "items": {}
+                },
+                "extraRules": {
+                    "type": "array",
+                    "description": "Additional rules to be covered with this ingress record",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        }
+    }
+}

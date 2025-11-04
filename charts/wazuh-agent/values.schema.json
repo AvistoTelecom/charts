@@ -1,0 +1,368 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "Global Docker registry secret names as an array",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "kubeVersion": {
+            "type": "string",
+            "description": "Override Kubernetes version",
+            "default": ""
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "String to partially override common.names.fullname template (will maintain the release name)",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "String to fully override common.names.fullname template",
+            "default": ""
+        },
+        "clusterDomain": {
+            "type": "string",
+            "description": "Kubernetes Cluster Domain",
+            "default": "cluster.local"
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Add labels to all the deployed resources",
+            "default": {}
+        },
+        "commonAnnotations": {
+            "type": "object",
+            "description": "Add annotations to all the deployed resources",
+            "default": {}
+        },
+        "agent": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the Wazuh Agent",
+                    "default": "wazuh-agent"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string",
+                            "description": "Wazuh Agent image registry",
+                            "default": "ghcr.io"
+                        },
+                        "repository": {
+                            "type": "string",
+                            "description": "Wazuh Agent image repository",
+                            "default": "avistotelecom/docker-wazuh-agent"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "Wazuh Agent image tag (immutable tags are recommended)",
+                            "default": "4.12.0"
+                        },
+                        "digest": {
+                            "type": "string",
+                            "description": "Wazuh Agent image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag",
+                            "default": ""
+                        },
+                        "pullPolicy": {
+                            "type": "string",
+                            "description": "Wazuh Agent image pull policy",
+                            "default": "IfNotPresent"
+                        },
+                        "pullSecrets": {
+                            "type": "array",
+                            "description": "Specify image pull secrets",
+                            "default": [],
+                            "items": {}
+                        }
+                    }
+                },
+                "configuration": {
+                    "type": "object",
+                    "properties": {
+                        "joinManagerMasterHost": {
+                            "type": "string",
+                            "description": "Ip address or Domain name of Wazuh server using for restapi",
+                            "default": ""
+                        },
+                        "joinManagerProtocol": {
+                            "type": "string",
+                            "description": "Http or https protocol for Wazuh restapi",
+                            "default": "https"
+                        },
+                        "joinManagerApiPort": {
+                            "type": "string",
+                            "description": "Port where the Wazuh API listened",
+                            "default": "55000"
+                        },
+                        "joinManagerPort": {
+                            "type": "string",
+                            "description": "Port where the Wazuh Server listened",
+                            "default": "1514"
+                        },
+                        "username": {
+                            "type": "string",
+                            "description": "Username of the Wazuh server API",
+                            "default": ""
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "Password of the Wazuh server API",
+                            "default": ""
+                        },
+                        "wazuhGroups": {
+                            "type": "string",
+                            "description": "Group(s) name comma separated for auto adding agent",
+                            "default": "default"
+                        },
+                        "configProfile": {
+                            "type": "string",
+                            "description": "Config profile name comma separated",
+                            "default": "debian, debian12"
+                        },
+                        "rootcheck": {
+                            "type": "string",
+                            "description": "Rootcheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<rootcheck>` and end with `</rootcheck>`",
+                            "default": ""
+                        },
+                        "ciscat": {
+                            "type": "string",
+                            "description": "Cis-cat configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name=\"cis-cat\">` and end with `</wodle>`",
+                            "default": ""
+                        },
+                        "osquery": {
+                            "type": "string",
+                            "description": "Osquery configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name=\"osquery\">` and end with `</wodle>`",
+                            "default": ""
+                        },
+                        "syscollector": {
+                            "type": "string",
+                            "description": "Syscollector configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<wodle name=\"syscollector\">` and end with `</wodle>`",
+                            "default": ""
+                        },
+                        "sca": {
+                            "type": "string",
+                            "description": "Sca configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<sca>` and end with `</sca>`",
+                            "default": ""
+                        },
+                        "syscheck": {
+                            "type": "string",
+                            "description": "Syscheck configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<syscheck>` and end with `</syscheck>`",
+                            "default": ""
+                        },
+                        "loganalysis": {
+                            "type": "string",
+                            "description": "Log analysis configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Could contain multiple `<localfile></localfile>` blocks",
+                            "default": ""
+                        },
+                        "activeresponse": {
+                            "type": "string",
+                            "description": "Active response configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<active-response>` and end with `</active-response>`",
+                            "default": ""
+                        },
+                        "logformat": {
+                            "type": "string",
+                            "description": "Log format configuration of the Wazuh agent (ossec.conf) formatted as YAML block text. Must start with `<logging>` and end with `</logging>`",
+                            "default": ""
+                        },
+                        "additionalconfig": {
+                            "type": "string",
+                            "description": "Additional configuration of the Wazuh agent (ossec.conf) which is not provided by the previous parameters and formatted as YAML block text.",
+                            "default": ""
+                        }
+                    }
+                },
+                "existingConfigmap": {
+                    "type": "string",
+                    "description": "Name of an existing ConfigMap with agent configuration (ossec.conf)",
+                    "default": ""
+                },
+                "extraEnvVars": {
+                    "type": "array",
+                    "description": "Array with extra environment variables to add to Wazuh Agent nodes",
+                    "default": [],
+                    "items": {}
+                },
+                "extraEnvVarsCM": {
+                    "type": "string",
+                    "description": "Name of existing ConfigMap containing extra env vars for Wazuh Agent nodes",
+                    "default": ""
+                },
+                "extraEnvVarsSecret": {
+                    "type": "string",
+                    "description": "Name of existing Secret containing extra env vars for Wazuh Agent nodes",
+                    "default": ""
+                },
+                "command": {
+                    "type": "array",
+                    "description": "Override default container command (useful when using custom images)",
+                    "default": [],
+                    "items": {}
+                },
+                "args": {
+                    "type": "array",
+                    "description": "Override default container args (useful when using custom images)",
+                    "default": [],
+                    "items": {}
+                },
+                "livenessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable livenessProbe on Wazuh Agent containers",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay seconds for livenessProbe",
+                            "default": 40
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period seconds for livenessProbe",
+                            "default": 10
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout seconds for livenessProbe",
+                            "default": 10
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for livenessProbe",
+                            "default": 5
+                        }
+                    }
+                },
+                "readinessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable readinessProbe on Wazuh Agent containers",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay seconds for readinessProbe",
+                            "default": 40
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period seconds for readinessProbe",
+                            "default": 10
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout seconds for readinessProbe",
+                            "default": 10
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for readinessProbe",
+                            "default": 5
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "description": "The resources limits for the Wazuh Agent containers",
+                            "default": {}
+                        },
+                        "requests": {
+                            "type": "object",
+                            "description": "The requested resources for the Wazuh Agent containers",
+                            "default": {}
+                        }
+                    }
+                },
+                "containerSecurityContext": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable container security context",
+                            "default": true
+                        }
+                    }
+                },
+                "containerPorts": {
+                    "type": "object",
+                    "properties": {
+                        "http": {
+                            "type": "number",
+                            "description": "Wazuh Agent container port for http",
+                            "default": 5000
+                        }
+                    }
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Map of labels to add to the daemonset",
+                    "default": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Annotations for Wazuh Agent primary pods",
+                    "default": {}
+                },
+                "podLabels": {
+                    "type": "object",
+                    "description": "Map of labels to add to the pods",
+                    "default": {}
+                },
+                "podAnnotations": {
+                    "type": "object",
+                    "description": "Map of annotations to add to the pods",
+                    "default": {}
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Wazuh Agent daemonset update strategy type",
+                            "default": "RollingUpdate"
+                        },
+                        "rollingUpdate": {
+                            "type": "object",
+                            "description": "Wazuh Agent daemonset update strategy parameters",
+                            "default": {}
+                        }
+                    }
+                },
+                "extraVolumeMounts": {
+                    "type": "array",
+                    "description": "Optionally specify extra list of additional volumeMounts for the Wazuh Agent container(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "extraVolumes": {
+                    "type": "array",
+                    "description": "Optionally specify extra list of additional volumes for the Wazuh Agent pod(s)",
+                    "default": [],
+                    "items": {}
+                },
+                "extraPodSpec": {
+                    "type": "object",
+                    "description": "Optionally specify extra PodSpec for the Wazuh Agent pod(s)",
+                    "default": {}
+                }
+            }
+        }
+    }
+}
