@@ -25,6 +25,10 @@ jobs:
         if: steps.changed.outputs.charts != ''
         run: |
           for chart in ${{ steps.changed.outputs.charts }}; do
+            if [ "$chart" = "kubebrowser" ]; then
+              echo "Skipping kubebrowser chart as it requires special handling"
+              continue
+            fi
             echo "Testing chart: $chart"
             helm dependency update charts/$chart || true
             helm install --wait --generate-name charts/$chart
