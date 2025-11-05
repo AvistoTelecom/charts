@@ -7,6 +7,30 @@ entries:
         url: https://keybase.io/avistotelecom/pgp_keys.asc
     apiVersion: v2
     appVersion: 25.2.3
+    created: "2025-11-05T09:42:08.396648913Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: Cloud Database Manager
+    digest: bca88e99224869f93bbbf1cab30072ba91f70be88797748a36ed2ceb98112e46
+    icon: https://github.com/dbeaver/cloudbeaver/wiki/images/cloudbeaver-head.png
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: cloudbeaver
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/cloudbeaver-1.0.9/cloudbeaver-1.0.9.tgz
+    version: 1.0.9
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 25.2.3
     created: "2025-10-21T08:49:54.946221032Z"
     dependencies:
     - name: common
@@ -218,6 +242,28 @@ entries:
     - https://github.com/AvistoTelecom/charts/releases/download/cloudbeaver-1.0.0/cloudbeaver-1.0.0.tgz
     version: 1.0.0
   kubebrowser:
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 0.8.3
+    created: "2025-11-05T09:42:08.591816448Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Allow whitelisted people to access your kubeconfigs
+    digest: 3f361111b80ce189762677161e2de1aa70c3920a284ebbb50f87cf4635c7c16b
+    icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: kubebrowser
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.1.7/kubebrowser-1.1.7.tgz
+    version: 1.1.7
   - annotations:
       artifacthub.io/signKey: |
         fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
@@ -448,6 +494,27 @@ entries:
         url: https://keybase.io/avistotelecom/pgp_keys.asc
     apiVersion: v2
     appVersion: 4.12.0
+    created: "2025-11-05T09:42:08.793219124Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Wazuh Agent Helm chart for Kubernetes
+    digest: 5644a6d735a3e1ec7d415e9c5d1630d297d2d35a43bea51ecff6b4b7406c2323
+    maintainers:
+    - email: kylian.le-saux@avisto.com
+      name: KylianLeSaux
+    name: wazuh-agent
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.2/wazuh-agent-4.12.2.tgz
+    version: 4.12.2
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 4.12.0
     created: "2025-06-23T15:38:11.360189031Z"
     dependencies:
     - name: common
@@ -480,4 +547,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2025-10-21T08:49:54.946284651Z"
+generated: "2025-11-05T09:42:08.793314391Z"
