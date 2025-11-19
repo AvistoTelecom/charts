@@ -6,6 +6,30 @@ entries:
         fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
         url: https://keybase.io/avistotelecom/pgp_keys.asc
     apiVersion: v2
+    appVersion: 25.2.5
+    created: "2025-11-19T10:36:23.78711679Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: Cloud Database Manager
+    digest: b54a8ecf58c6a962c5864e1e1ff48b9cd75ca491336d57732ef23455d5a217db
+    icon: https://github.com/dbeaver/cloudbeaver/wiki/images/cloudbeaver-head.png
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: cloudbeaver
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/cloudbeaver-1.0.10/cloudbeaver-1.0.10.tgz
+    version: 1.0.10
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
     appVersion: 25.2.3
     created: "2025-11-05T09:42:08.396648913Z"
     dependencies:
@@ -547,4 +571,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2025-11-05T09:42:08.793314391Z"
+generated: "2025-11-19T10:36:23.787188895Z"
