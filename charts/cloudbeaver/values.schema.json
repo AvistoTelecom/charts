@@ -85,7 +85,7 @@
                 "tag": {
                     "type": "string",
                     "description": "Cloudbeaver Image tag (immutable tags are recommended)",
-                    "default": "25.2.3"
+                    "default": "25.2.5"
                 },
                 "digest": {
                     "type": "string",
