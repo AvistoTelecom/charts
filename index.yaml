@@ -271,6 +271,28 @@ entries:
         fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
         url: https://keybase.io/avistotelecom/pgp_keys.asc
     apiVersion: v2
+    appVersion: 0.9.0
+    created: "2025-11-25T15:33:25.828320627Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.30.0
+    description: Allow whitelisted people to access your kubeconfigs
+    digest: 12285e257b632ee9845c2f310d7106c8c9dcd69af327f404bac06f14f8906d6c
+    icon: https://raw.githubusercontent.com/AvistoTelecom/kubebrowser/refs/tags/0.6.0/docs/public/logo_light.svg
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: kubebrowser
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/kubebrowser-1.1.8/kubebrowser-1.1.8.tgz
+    version: 1.1.8
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
     appVersion: 0.8.3
     created: "2025-11-05T09:42:08.591816448Z"
     dependencies:
@@ -571,4 +593,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2025-11-19T10:36:23.787188895Z"
+generated: "2025-11-25T15:33:25.828396127Z"
