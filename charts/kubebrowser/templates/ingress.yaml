@@ -2,7 +2,7 @@
 Author: Yann Lacroix <yann.lacroix@avisto.com>
 */}}
 
-{{- if and .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
