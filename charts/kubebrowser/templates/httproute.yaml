@@ -31,7 +31,7 @@ spec:
         - group: ''
           kind: Service
           name: {{ include "kubebrowser.server.fullname" $ }}
-          port: {{ tpl ($.Values.server.containerPorts.http ) $ }}
+          port: {{ $.Values.server.containerPorts.http}}
           weight: 1
       {{- end }}
       {{- if $rule.filters }}
