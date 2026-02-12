@@ -18,8 +18,8 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
   {{- end }}
   rules:
-    {{- if (include "kubebrowser.ingress.hostname" .) }}
-    - host: {{ include "kubebrowser.ingress.hostname" . }}
+    {{- if (include "kubebrowser.hostname" .) }}
+    - host: {{ include "kubebrowser.hostname" . }}
       http:
         paths:
           {{- if .Values.ingress.extraPaths }}
@@ -50,8 +50,8 @@ spec:
   tls:
     {{- if and .Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $annotationsMap )) .Values.ingress.selfSigned) }}
     - hosts:
-        - {{ include "kubebrowser.ingress.hostname" . }}
-      secretName: {{ printf "%s-tls" (include "kubebrowser.ingress.hostname" .) }}
+        - {{ include "kubebrowser.hostname" . }}
+      secretName: {{ printf "%s-tls" (include "kubebrowser.hostname" .) }}
     {{- end }}
     {{- if .Values.ingress.extraTls }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.ingress.extraTls "context" $ ) | nindent 4 }}

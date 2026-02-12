@@ -191,11 +191,14 @@ server:
   hostAliases: []
   ## @param server.hostNetwork Specify if host network should be enabled for kubebrowser pod
   ##
+  hostNetwork: false
   ## @param server.containerPorts.http kubebrowser server container port for http
   ##
   containerPorts:
     http: 8080
-  hostNetwork: false
+  ## @param server.hostname Hostname for kubebrowser server
+  ##
+  hostname: ""
   ## @param server.hostIPC Specify if host IPC should be enabled for kubebrowser pod
   ##
   hostIPC: false
@@ -350,9 +353,9 @@ ingress:
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
   ##
   ingressClassName: ""
-  ## @param ingress.hostname Default host for the ingress resource
+  ## @param ingress.hostname (DEPRECATED use server.hostname instead) Default host for the ingress resource
   ##
-  hostname: kubebrowser.local
+  hostname: ""
   ## @param ingress.pathType Ingress path type
   ##
   pathType: ImplementationSpecific
@@ -372,7 +375,7 @@ ingress:
   ##
   annotations: {}
   ## @param ingress.tls Enable TLS configuration for the hostname defined at `ingress.hostname` parameter
-  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
+  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.hostname }}`
   ## You can:
   ##   - Use the `ingress.secrets` parameter to create this TLS secret
   ##   - Rely on cert-manager to create it by setting the corresponding annotations
@@ -459,12 +462,6 @@ httpRoute:
   ##     namespace: gateway
   ##
   parentRefs: []
-  ## @param httpRoute.hostnames List of hostnames for the HTTPRoute
-  ## e.g:
-  ## hostnames:
-  ##   - kubebrowser.example.com
-  ##
-  hostnames: []
   ## @skip httpRoute.rules
   ## @param httpRoute.rules (Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default
   ## e.g:

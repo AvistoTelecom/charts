@@ -46,8 +46,8 @@ Return the ingress anotation
 {{- end -}}
 
 {{/*
-Return the ingress hostname
+Return the correct hostname
 */}}
-{{- define "kubebrowser.ingress.hostname" -}}
-{{- tpl .Values.ingress.hostname $ -}}
+{{- define "kubebrowser.hostname" -}}
+{{- coalesce (tpl .Values.server.hostname $) (tpl .Values.ingress.hostname $) -}}
 {{- end -}}

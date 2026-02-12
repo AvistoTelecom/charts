@@ -361,6 +361,11 @@
                         }
                     }
                 },
+                "hostname": {
+                    "type": "string",
+                    "description": "Hostname for kubebrowser server",
+                    "default": ""
+                },
                 "hostIPC": {
                     "type": "boolean",
                     "description": "Specify if host IPC should be enabled for kubebrowser pod",
@@ -561,8 +566,8 @@
                 },
                 "hostname": {
                     "type": "string",
-                    "description": "Default host for the ingress resource",
-                    "default": "kubebrowser.local"
+                    "description": "(DEPRECATED use server.hostname instead) Default host for the ingress resource",
+                    "default": ""
                 },
                 "pathType": {
                     "type": "string",
@@ -642,12 +647,6 @@
                 "parentRefs": {
                     "type": "array",
                     "description": "Gateway API parentRefs for the HTTPRoute. Must reference an existing Gateway",
-                    "default": [],
-                    "items": {}
-                },
-                "hostnames": {
-                    "type": "array",
-                    "description": "List of hostnames for the HTTPRoute",
                     "default": [],
                     "items": {}
                 }
