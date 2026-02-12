@@ -86,7 +86,7 @@ spec:
           env:
             - name: GIN_MODE
               value: "release"
-            {{- if .Values.ingress.enabled }}
+            {{- if or .Values.ingress.enabled .Values.httpRoute.enabled }}
             - name: KUBEBROWSER_HOSTNAME
               value: {{ printf "%s://%s" (ternary "https" "http" (or .Values.ingress.tls (gt (len .Values.ingress.extraTls) 0) .Values.httpRoute.enabled)) (include "kubebrowser.hostname" $) }}
             {{- end }}
