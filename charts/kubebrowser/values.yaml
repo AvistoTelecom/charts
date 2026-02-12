@@ -437,3 +437,52 @@ ingress:
   ##             name: http
   ##
   extraRules: []
+
+## HTTPRoute configuration
+## ref: https://gateway-api.sigs.k8s.io/api-types/httproute/
+httpRoute:
+  ## @param httpRoute.enabled Whether to enable this HTTPRoute & subsequently create the HTTPRoute resource
+  ##
+  enabled: false
+  ## @param httpRoute.annotations Additional HTTPRoute annotations
+  ##
+  annotations: {}
+  ## @param httpRoute.labels Additional HTTPRoute labels
+  ##
+  labels: {}
+  ## @param httpRoute.parentRefs Gateway API parentRefs for the HTTPRoute. Must reference an existing Gateway
+  ## e.g:
+  ## parentRefs:
+  ##   - group: gateway.networking.k8s.io
+  ##     kind: Gateway
+  ##     name: main-gateway
+  ##     namespace: gateway
+  ##
+  parentRefs: []
+  ## @param httpRoute.hostnames List of hostnames for the HTTPRoute
+  ## e.g:
+  ## hostnames:
+  ##   - kubebrowser.example.com
+  ##
+  hostnames: []
+  ## @skip httpRoute.rules
+  ## @param httpRoute.rules (Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default
+  ## e.g:
+  ## rules:
+  ##   - matches:
+  ##       - path:
+  ##           type: PathPrefix
+  ##           value: /
+  ##     filters:
+  ##       - type: RequestHeaderModifier
+  ##         requestHeaderModifier:
+  ##           add:
+  ##             - name: X-Custom-Header
+  ##               value: custom-value
+  ##     timeouts:
+  ##       request: 500ms
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
