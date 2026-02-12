@@ -627,7 +627,7 @@
                 "enabled": {
                     "type": "boolean",
                     "description": "Whether to enable this HTTPRoute & subsequently create the HTTPRoute resource",
-                    "default": true
+                    "default": false
                 },
                 "annotations": {
                     "type": "object",

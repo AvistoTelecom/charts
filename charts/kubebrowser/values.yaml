@@ -443,7 +443,7 @@ ingress:
 httpRoute:
   ## @param httpRoute.enabled Whether to enable this HTTPRoute & subsequently create the HTTPRoute resource
   ##
-  enabled: true
+  enabled: false
   ## @param httpRoute.annotations Additional HTTPRoute annotations
   ##
   annotations: {}
