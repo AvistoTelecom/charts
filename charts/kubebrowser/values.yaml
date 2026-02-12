@@ -465,8 +465,8 @@ httpRoute:
   ##   - kubebrowser.example.com
   ##
   hostnames: []
-  ## @skip httpRoute.rules[]
-  ## @param httpRoute.rules [array] (Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default
+  ## @skip httpRoute.rules
+  ## @param httpRoute.rules (Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default
   ## e.g:
   ## rules:
   ##   - matches:

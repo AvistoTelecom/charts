@@ -650,14 +650,6 @@
                     "description": "List of hostnames for the HTTPRoute",
                     "default": [],
                     "items": {}
-                },
-                "rules": {
-                    "type": "array",
-                    "description": "(Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default",
-                    "default": "[]",
-                    "items": {
-                        "type": "string"
-                    }
                 }
             }
         }
