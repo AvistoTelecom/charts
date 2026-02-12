@@ -18,7 +18,7 @@ spec:
   parentRefs:
   {{- tpl (toYaml .Values.httpRoute.parentRefs) $ | nindent 4 }}
   hostnames:
-  {{- tpl (toYaml .Values.httpRoute.hostnames) $ | nindent 4 }}
+    - {{ include "kubebrowser.hostname" $ }}
   rules:
   {{- range $ruleIdx, $rule := .Values.httpRoute.rules }}
     - matches:
