@@ -12,3 +12,10 @@ Return the correct hostname
 {{- define "cloudbeaver.hostname" -}}
 {{- coalesce (tpl .Values.hostname $) (tpl .Values.ingress.hostname $) -}}
 {{- end -}}
+
+{{/*
+Return the correct hostname
+*/}}
+{{- define "cloudbeaver.hostname" -}}
+{{- coalesce (tpl .Values.hostname $) (tpl .Values.ingress.hostname $) -}}
+{{- end -}}
