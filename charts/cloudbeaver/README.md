@@ -74,6 +74,7 @@ helm install my-cloudbeaver avisto/cloudbeaver
 | `dnsConfig`                                         | allows users more control on the DNS settings for a Pod. Required if `dnsPolicy` is set to `None`                 | `{}`                  |
 | `sidecars`                                          | Attach additional containers to the pod (evaluated as a template)                                                 | `[]`                  |
 | `containerPorts.http`                               | HTTP Container port                                                                                               | `8978`                |
+| `hostname`                                          | Hostname for cloudbeaver exposure (HTTPRoute/Ingress)                                                             | `""`                  |
 | `extraEnvVars`                                      | An array to add extra env vars                                                                                    | `[]`                  |
 | `extraEnvVarsCM`                                    | ConfigMap containing extra env vars                                                                               | `""`                  |
 | `extraEnvVarsSecret`                                | Secret containing extra env vars (in case of sensitive data)                                                      | `""`                  |
@@ -122,40 +123,50 @@ helm install my-cloudbeaver avisto/cloudbeaver
 
 ### Cloudbeaver persistence parameters
 
-| Name                                    | Description                                                                                                                      | Value                        |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `persistence.enabled`                   | Enable cloudbeaver data persistence using PVC. If false, use emptyDir                                                            | `true`                       |
-| `persistence.storageClass`              | PVC Storage Class for cloudbeaver data volume                                                                                    | `""`                         |
-| `persistence.mountPath`                 | Data volume mount path                                                                                                           | `/opt/cloudbeaver/workspace` |
-| `persistence.accessModes`               | PVC Access Modes for cloudbeaver data volume                                                                                     | `["ReadWriteOnce"]`          |
-| `persistence.size`                      | PVC Storage Request for cloudbeaver data volume                                                                                  | `5Gi`                        |
-| `persistence.annotations`               | Annotations for the PVC                                                                                                          | `{}`                         |
-| `persistence.existingClaim`             | Name of an existing PVC to use                                                                                                   | `""`                         |
-| `persistence.selector`                  | Selector to match an existing Persistent Volume for cloudbeaver data PVC                                                         | `{}`                         |
-| `persistence.dataSource`                | Custom PVC data source                                                                                                           | `{}`                         |
-| `networkPolicy.enabled`                 | Specifies whether a NetworkPolicy should be created                                                                              | `false`                      |
-| `networkPolicy.allowExternal`           | Don't require server label for connections                                                                                       | `false`                      |
-| `networkPolicy.allowExternalEgress`     | Allow the pod to access any range of port and all destinations.                                                                  | `true`                       |
-| `networkPolicy.kubeAPIServerPorts`      | List of possible endpoints to kube-apiserver (limit to your cluster settings to increase security)                               | `[]`                         |
-| `networkPolicy.extraIngress`            | Add extra ingress rules to the NetworkPolicy                                                                                     | `[]`                         |
-| `networkPolicy.extraEgress`             | Add extra ingress rules to the NetworkPolicy                                                                                     | `[]`                         |
-| `networkPolicy.ingressNSMatchLabels`    | Labels to match to allow traffic from other namespaces                                                                           | `{}`                         |
-| `networkPolicy.ingressNSPodMatchLabels` | Pod labels to match to allow traffic from other namespaces                                                                       | `{}`                         |
-| `ingress.enabled`                       | Enable ingress record generation for Cloudbeaver                                                                                 | `false`                      |
-| `ingress.ingressClassName`              | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`                         |
-| `ingress.pathType`                      | Ingress path type                                                                                                                | `ImplementationSpecific`     |
-| `ingress.apiVersion`                    | Force Ingress API version (automatically detected if not set)                                                                    | `""`                         |
-| `ingress.controller`                    | The ingress controller type. Currently supports `default` and `gce`                                                              | `default`                    |
-| `ingress.hostname`                      | Default host for the ingress record (evaluated as template)                                                                      | `cloudbeaver.local`          |
-| `ingress.hostnameStrict`                | Disables dynamically resolving the hostname from request headers.                                                                | `false`                      |
-| `ingress.path`                          | Default path for the ingress record (evaluated as template)                                                                      | `""`                         |
-| `ingress.servicePort`                   | Backend service port to use                                                                                                      | `http`                       |
-| `ingress.annotations`                   | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`                         |
-| `ingress.labels`                        | Additional labels for the Ingress resource.                                                                                      | `{}`                         |
-| `ingress.tls`                           | Enable TLS configuration for the host defined at `ingress.hostname` parameter                                                    | `false`                      |
-| `ingress.selfSigned`                    | Create a TLS secret for this ingress record using self-signed certificates generated by Helm                                     | `false`                      |
-| `ingress.extraHosts`                    | An array with additional hostname(s) to be covered with the ingress record                                                       | `[]`                         |
-| `ingress.extraPaths`                    | Any additional arbitrary paths that may need to be added to the ingress under the main host.                                     | `[]`                         |
-| `ingress.extraTls`                      | The tls configuration for additional hostnames to be covered with this ingress record.                                           | `[]`                         |
-| `ingress.secrets`                       | If you're providing your own certificates, please use this to add the certificates as secrets                                    | `[]`                         |
-| `ingress.extraRules`                    | Additional rules to be covered with this ingress record                                                                          | `[]`                         |
+| Name                        | Description                                                              | Value                        |
+| --------------------------- | ------------------------------------------------------------------------ | ---------------------------- |
+| `persistence.enabled`       | Enable cloudbeaver data persistence using PVC. If false, use emptyDir    | `true`                       |
+| `persistence.storageClass`  | PVC Storage Class for cloudbeaver data volume                            | `""`                         |
+| `persistence.mountPath`     | Data volume mount path                                                   | `/opt/cloudbeaver/workspace` |
+| `persistence.accessModes`   | PVC Access Modes for cloudbeaver data volume                             | `["ReadWriteOnce"]`          |
+| `persistence.size`          | PVC Storage Request for cloudbeaver data volume                          | `5Gi`                        |
+| `persistence.annotations`   | Annotations for the PVC                                                  | `{}`                         |
+| `persistence.existingClaim` | Name of an existing PVC to use                                           | `""`                         |
+| `persistence.selector`      | Selector to match an existing Persistent Volume for cloudbeaver data PVC | `{}`                         |
+| `persistence.dataSource`    | Custom PVC data source                                                   | `{}`                         |
+
+### Cloudbeaver network parameters
+
+| Name                                    | Description                                                                                                                      | Value                    |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `networkPolicy.enabled`                 | Specifies whether a NetworkPolicy should be created                                                                              | `false`                  |
+| `networkPolicy.allowExternal`           | Don't require server label for connections                                                                                       | `false`                  |
+| `networkPolicy.allowExternalEgress`     | Allow the pod to access any range of port and all destinations.                                                                  | `true`                   |
+| `networkPolicy.kubeAPIServerPorts`      | List of possible endpoints to kube-apiserver (limit to your cluster settings to increase security)                               | `[]`                     |
+| `networkPolicy.extraIngress`            | Add extra ingress rules to the NetworkPolicy                                                                                     | `[]`                     |
+| `networkPolicy.extraEgress`             | Add extra ingress rules to the NetworkPolicy                                                                                     | `[]`                     |
+| `networkPolicy.ingressNSMatchLabels`    | Labels to match to allow traffic from other namespaces                                                                           | `{}`                     |
+| `networkPolicy.ingressNSPodMatchLabels` | Pod labels to match to allow traffic from other namespaces                                                                       | `{}`                     |
+| `ingress.enabled`                       | Enable ingress record generation for Cloudbeaver                                                                                 | `false`                  |
+| `ingress.ingressClassName`              | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`                     |
+| `ingress.pathType`                      | Ingress path type                                                                                                                | `ImplementationSpecific` |
+| `ingress.apiVersion`                    | Force Ingress API version (automatically detected if not set)                                                                    | `""`                     |
+| `ingress.controller`                    | The ingress controller type. Currently supports `default` and `gce`                                                              | `default`                |
+| `ingress.hostname`                      | (DEPRECATED use `hostname` instead) Default host for the ingress resource                                                        | `""`                     |
+| `ingress.hostnameStrict`                | Disables dynamically resolving the hostname from request headers.                                                                | `false`                  |
+| `ingress.path`                          | Default path for the ingress record (evaluated as template)                                                                      | `""`                     |
+| `ingress.servicePort`                   | Backend service port to use                                                                                                      | `http`                   |
+| `ingress.annotations`                   | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`                     |
+| `ingress.labels`                        | Additional labels for the Ingress resource.                                                                                      | `{}`                     |
+| `ingress.tls`                           | Enable TLS configuration for the host defined at `ingress.hostname` parameter                                                    | `false`                  |
+| `ingress.selfSigned`                    | Create a TLS secret for this ingress record using self-signed certificates generated by Helm                                     | `false`                  |
+| `ingress.extraHosts`                    | An array with additional hostname(s) to be covered with the ingress record                                                       | `[]`                     |
+| `ingress.extraPaths`                    | Any additional arbitrary paths that may need to be added to the ingress under the main host.                                     | `[]`                     |
+| `ingress.extraTls`                      | The tls configuration for additional hostnames to be covered with this ingress record.                                           | `[]`                     |
+| `ingress.secrets`                       | If you're providing your own certificates, please use this to add the certificates as secrets                                    | `[]`                     |
+| `ingress.extraRules`                    | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
+| `httpRoute.enabled`                     | Whether to enable this HTTPRoute & subsequently create the HTTPRoute resource                                                    | `false`                  |
+| `httpRoute.annotations`                 | Additional HTTPRoute annotations                                                                                                 | `{}`                     |
+| `httpRoute.labels`                      | Additional HTTPRoute labels                                                                                                      | `{}`                     |
+| `httpRoute.parentRefs`                  | Gateway API parentRefs for the HTTPRoute. Must reference an existing Gateway                                                     | `[]`                     |
+| `httpRoute.rules`                       | (Optional) HTTPRoute rules configuration, if overriden, backendRefs is set by default                                            | `undefined`              |
