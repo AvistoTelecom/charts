@@ -1,0 +1,46 @@
+{{- /*
+Author: Yann Lacroix <yann.lacroix@avisto.com>
+*/}}
+
+{{- if .Values.httpRoute.enabled -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.httpRoute.labels .Values.commonLabels ) "context" $ ) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+  {{- if or .Values.httpRoute.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.httpRoute.annotations .Values.commonAnnotations ) "context" $ ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+  {{- tpl (toYaml .Values.httpRoute.parentRefs) $ | nindent 4 }}
+  hostnames:
+    - {{ include "cloudbeaver.hostname" . }}
+  rules:
+  {{- range $ruleIdx, $rule := .Values.httpRoute.rules }}
+    - matches:
+      {{- tpl (toYaml $rule.matches) $ | nindent 8 }}
+      {{- if $rule.backendRefs }}
+      backendRefs:
+      {{- tpl (toYaml $rule.backendRefs) $ | nindent 8 }}
+      {{- else }}
+      backendRefs:
+        - group: ''
+          kind: Service
+          name: {{ include "common.names.fullname" $ }}
+          port: {{ $.Values.containerPorts.http }}
+          weight: 1
+      {{- end }}
+      {{- if $rule.filters }}
+      filters:
+      {{- tpl (toYaml $rule.filters) $ | nindent 8 }}
+      {{- end }}
+      {{- if $rule.timeouts }}
+      timeouts:
+      {{- tpl (toYaml $rule.timeouts) $ | nindent 8 }}
+      {{- end }}
+  {{- end -}}
+{{- end -}}

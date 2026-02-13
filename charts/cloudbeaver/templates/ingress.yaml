@@ -16,8 +16,8 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
   {{- end }}
   rules:
-    {{- if .Values.ingress.hostname }}
-    - host: {{ (tpl .Values.ingress.hostname .) | quote }}
+    {{- if (include "cloudbeaver.hostname" .) }}
+    - host: {{ include "cloudbeaver.hostname" . | quote }}
       http:
         paths:
           {{- if .Values.ingress.extraPaths }}
@@ -42,8 +42,8 @@ spec:
   tls:
   {{- if and .Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ingress.annotations )) .Values.ingress.secrets .Values.ingress.selfSigned) }}
     - hosts:
-        - {{ (tpl .Values.ingress.hostname .) | quote }}
-      secretName: {{ printf "%s-tls" (tpl .Values.ingress.hostname .) }}
+        - {{ include "cloudbeaver.hostname" . | quote }}
+      secretName: {{ printf "%s-tls" include "cloudbeaver.hostname" . }}
     {{- end }}
     {{- if .Values.ingress.extraTls }}
     {{- include "common.tplvalues.render" (dict "value" .Values.ingress.extraTls "context" $) | nindent 4 }}
