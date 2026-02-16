@@ -48,7 +48,7 @@ helm install my-cloudbeaver avisto/cloudbeaver
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------- |
 | `image.registry`                                    | Cloudbeaver image registry                                                                                        | `docker.io`           |
 | `image.repository`                                  | Cloudbeaver image repository                                                                                      | `dbeaver/cloudbeaver` |
-| `image.tag`                                         | Cloudbeaver Image tag (immutable tags are recommended)                                                            | `25.2.5`              |
+| `image.tag`                                         | Cloudbeaver Image tag (immutable tags are recommended)                                                            | `25.3.0`              |
 | `image.digest`                                      | Cloudbeaver image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag       | `""`                  |
 | `image.pullPolicy`                                  | Cloudbeaver image pull policy                                                                                     | `IfNotPresent`        |
 | `image.pullSecrets`                                 | Cloudbeaver image pull secrets                                                                                    | `[]`                  |
