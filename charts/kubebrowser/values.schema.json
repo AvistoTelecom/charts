@@ -364,7 +364,12 @@
                 "hostname": {
                     "type": "string",
                     "description": "Hostname for kubebrowser server",
-                    "default": ""
+                    "default": "localhost:8080"
+                },
+                "insecure": {
+                    "type": "boolean",
+                    "description": "Whether kubebrowser should expect http or https for its own hostname (e.g. for oauth2 callback)",
+                    "default": false
                 },
                 "hostIPC": {
                     "type": "boolean",

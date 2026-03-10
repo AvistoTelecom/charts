@@ -10,6 +10,7 @@ Prepare your `values.yaml`
 
 ```yaml
 server:
+  hostname: "kubebrowser.example.com" # match your redirect URI
   oidc:
     clientID: <your-client-id>
     clientSecret: <your-client-secret>
@@ -27,6 +28,14 @@ Install chart
 ```
 helm install my-kubebrowser avisto/kubebrowser -f values.yaml
 ```
+
+## Migration guide
+
+### From 1.3 to 1.4
+
+By default, `https` is now assumed for the `KUBEBROWSER_HOSTNAME` environment variable (used for oauth2 callback).
+
+Set `server.insecure=true` if you want to keep `http` prefix.
 
 ## Parameters
 
@@ -95,7 +104,8 @@ helm install my-kubebrowser avisto/kubebrowser -f values.yaml
 | `server.hostAliases`                                       | kubebrowser server pods host aliases                                                                                             | `[]`                                                                                              |
 | `server.hostNetwork`                                       | Specify if host network should be enabled for kubebrowser pod                                                                    | `false`                                                                                           |
 | `server.containerPorts.http`                               | kubebrowser server container port for http                                                                                       | `8080`                                                                                            |
-| `server.hostname`                                          | Hostname for kubebrowser server                                                                                                  | `""`                                                                                              |
+| `server.hostname`                                          | Hostname for kubebrowser server                                                                                                  | `localhost:8080`                                                                                  |
+| `server.insecure`                                          | Whether kubebrowser should expect http or https for its own hostname (e.g. for oauth2 callback)                                  | `false`                                                                                           |
 | `server.hostIPC`                                           | Specify if host IPC should be enabled for kubebrowser pod                                                                        | `false`                                                                                           |
 | `server.labels`                                            | Map of labels to add to the statefulset                                                                                          | `{}`                                                                                              |
 | `server.annotations`                                       | Annotations for server pods                                                                                                      | `{}`                                                                                              |
