@@ -198,7 +198,7 @@ server:
     http: 8080
   ## @param server.hostname Hostname for kubebrowser server
   ##
-  hostname: "localhost:8080"
+  hostname: ""
   ## @param server.insecure Whether kubebrowser should expect http or https for its own hostname (e.g. for oauth2 callback)
   #
   insecure: false
