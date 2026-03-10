@@ -199,6 +199,9 @@ server:
   ## @param server.hostname Hostname for kubebrowser server
   ##
   hostname: ""
+  ## @param server.insecure Whether kubebrowser should expect http or https for its own hostname (e.g. for oauth2 callback)
+  #
+  insecure: false
   ## @param server.hostIPC Specify if host IPC should be enabled for kubebrowser pod
   ##
   hostIPC: false

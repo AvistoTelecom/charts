@@ -366,6 +366,11 @@
                     "description": "Hostname for kubebrowser server",
                     "default": ""
                 },
+                "insecure": {
+                    "type": "boolean",
+                    "description": "Whether kubebrowser should expect http or https for its own hostname (e.g. for oauth2 callback)",
+                    "default": false
+                },
                 "hostIPC": {
                     "type": "boolean",
                     "description": "Specify if host IPC should be enabled for kubebrowser pod",
