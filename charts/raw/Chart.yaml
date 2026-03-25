@@ -16,4 +16,4 @@ annotations:
     url: https://keybase.io/avistotelecom/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Fix regex to split objects in input templates: only the '---' line separator at the root level will be considered, excluding indented blocks with object parameters containing the '---' string as well (like TLS certificates)
+      description: Fix regex to split objects in input templates: only the "---" line separator will be considered, excluding object parameters containing the "---" string (like TLS certificates)
