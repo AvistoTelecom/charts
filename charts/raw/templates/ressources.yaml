@@ -5,7 +5,7 @@
 {{- end }}
 {{- range $i, $t := .Values.templates }}
 {{ $kubeResources := tpl $t $ }}
-{{/* Match "---" line separator without leading indentation and with potential trailing whitespaces or comment before the end of line */}}
+{{/* Match "---" line separator without with potential leading and trailing whitespaces or comment before the end of line */}}
 {{- range regexSplit "(?m)^\\s*---(\\s*#.*)?$" $kubeResources -1 }}
 {{- if . | trim }}
 ---
