@@ -8,12 +8,12 @@ keywords:
 maintainers:
   - name: Brawdunoir
     email: yann.lacroix@avisto.com
-version: 1.0.2
+version: 2.0.0
 kubeVersion: ">=1.16.0-0"
 annotations:
   artifacthub.io/signKey: |
     fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
     url: https://keybase.io/avistotelecom/pgp_keys.asc
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Fix regex to split objects in input templates: only the "---" line separator will be considered, excluding object parameters containing the "---" string (like TLS certificates)
+    - kind: changed
+      description: Improve regex to split objects in input templates: only the "---" line separator at the root level will be considered, excluding indented blocks with object parameters containing the "---" string as well (like TLS certificates). When upgrading to this 2.X.X version, be sure to verify that the templates passed in input only declare Kubernetes manifests aligned at the root level, without any leading indentation.
