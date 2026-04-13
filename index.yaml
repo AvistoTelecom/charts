@@ -748,6 +748,30 @@ entries:
     version: 1.0.0
   raw:
   - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
+          description: Fix regex to split objects in input templates: only the "---" line separator at the root level will be considered, excluding indented blocks with object parameters containing the "---" string as well (like TLS certificates). When upgrading to this version, be sure to verify that the templates passed in input only declare Kubernetes manifests aligned at the root level, without any leading indentation.
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-04-13T13:42:00.071690659Z"
+    description: A place for all the Kubernetes resources which don't already have
+      a home
+    digest: d367a9346915d0450d5899aee49876f1fd97a10abfa2d7b519e375a5b6152fd3
+    keywords:
+    - raw
+    - incubator
+    - incubator-raw
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: raw
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.2/raw-1.0.2.tgz
+    version: 1.0.2
+  - annotations:
       artifacthub.io/signKey: |
         fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
         url: https://keybase.io/avistotelecom/pgp_keys.asc
@@ -845,4 +869,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2026-04-02T16:09:42.080846903Z"
+generated: "2026-04-13T13:42:00.071791221Z"
