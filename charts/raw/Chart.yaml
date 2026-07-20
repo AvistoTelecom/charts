@@ -17,3 +17,4 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: Prevent comment-only sections before the YAML separator "---" from being treated as extra Kubernetes resources when rendering input templates. These extra documents were only containing merged chart's labels and were invalid Kubernetes manifests.
+      
