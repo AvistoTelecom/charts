@@ -8,7 +8,7 @@ keywords:
 maintainers:
   - name: Brawdunoir
     email: yann.lacroix@avisto.com
-version: 1.0.2
+version: 1.0.3
 kubeVersion: ">=1.16.0-0"
 annotations:
   artifacthub.io/signKey: |
@@ -16,4 +16,4 @@ annotations:
     url: https://keybase.io/avistotelecom/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: fixed
-      description: Fix regex to split objects in input templates: only the "---" line separator at the root level will be considered, excluding indented blocks with object parameters containing the "---" string as well (like TLS certificates). When upgrading to this version, be sure to verify that the templates passed in input only declare Kubernetes manifests aligned at the root level, without any leading indentation.
+      description: Prevent comment-only sections before the YAML separator "---" from being treated as extra Kubernetes resources when rendering input templates. These extra documents were only containing merged chart's labels and were invalid Kubernetes manifests.

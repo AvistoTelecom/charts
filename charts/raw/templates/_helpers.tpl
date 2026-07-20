@@ -31,8 +31,8 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-raw.resource will create a resource template that can be
-merged with each item in `.Values.resources`.
+raw.resource will create a resource template that will be
+merged with each item in `.Values.resources` and `.Values.templates`.
 */}}
 {{- define "raw.resource" -}}
 metadata:
