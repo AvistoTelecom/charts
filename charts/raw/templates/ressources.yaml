@@ -7,9 +7,10 @@
 {{ $kubeResources := tpl $t $ }}
 {{/* Match "---" line separator without leading indentation and with potential trailing whitespaces or comment before the end of line */}}
 {{- range regexSplit "(?m)^---\\s*(#.*)?$" $kubeResources -1 }}
-{{- if . | trim }}
+{{ $document := . | trim | fromYaml }}
+{{- if not (empty $document) }}
 ---
-{{ merge (. | fromYaml) $template | toYaml }}
+{{ merge $document $template | toYaml }}
 {{- end }}
 {{- end }}
 {{- end }}
