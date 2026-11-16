@@ -846,6 +846,30 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: "Prevent comment-only sections before the YAML separator \"---\" from being treated as extra Kubernetes resources when rendering input templates. These extra documents were only containing merged chart's labels and were invalid Kubernetes manifests."
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    created: "2026-11-16T13:03:12.991548703Z"
+    description: A place for all the Kubernetes resources which don't already have
+      a home
+    digest: 0adf50f97db10fd6aa02b138bb223d01a6ce225a03485d990fb4661d89c91111
+    keywords:
+    - raw
+    - incubator
+    - incubator-raw
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: raw
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/raw-1.0.3/raw-1.0.3.tgz
+    version: 1.0.3
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Fix regex to split objects in input templates: only the "---" line separator at the root level will be considered, excluding indented blocks with object parameters containing the "---" string as well (like TLS certificates). When upgrading to this version, be sure to verify that the templates passed in input only declare Kubernetes manifests aligned at the root level, without any leading indentation.
       artifacthub.io/signKey: |
         fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
@@ -965,4 +989,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2026-11-16T09:04:59.908193777Z"
+generated: "2026-11-16T13:03:12.991853679Z"
