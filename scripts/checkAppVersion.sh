@@ -30,6 +30,8 @@ CHART_PATHS["kubebrowser"]="server.image.tag"
 CHART_PATHS["raw"]=""
 CHART_PATHS["wazuh-agent"]="agent.image.tag"
 CHART_PATHS["cloudbeaver"]="image.tag"
+CHART_PATHS["pinniped-concierge"]="image.tag"
+CHART_PATHS["pinniped-supervisor"]="image.tag"
 # Add more as needed, space-separated for multiple paths
 
 failed=0

@@ -1,0 +1,24 @@
+{{- /*
+The Concierge patches spec.caBundle itself at runtime; GitOps tools should ignore that field.
+*/}}
+{{- range $group := list "login" "identity" }}
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1alpha1.{{ $group }}.concierge.pinniped.dev
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: concierge
+  {{- if $.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  version: v1alpha1
+  group: {{ $group }}.concierge.pinniped.dev
+  groupPriorityMinimum: 9900
+  versionPriority: 15
+  service:
+    name: {{ include "pinniped-concierge.apiServiceName" $ }}
+    namespace: {{ include "common.names.namespace" $ | quote }}
+    port: 443
+{{- end }}

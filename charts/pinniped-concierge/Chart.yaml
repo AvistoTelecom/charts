@@ -1,0 +1,26 @@
+apiVersion: v2
+name: pinniped-concierge
+description: Pinniped Concierge - credential exchange and impersonation proxy for Kubernetes clusters
+type: application
+version: 0.1.0
+appVersion: v0.48.0
+home: https://pinniped.dev
+sources:
+  - https://github.com/vmware-tanzu/pinniped
+keywords:
+  - pinniped
+  - authentication
+  - oidc
+dependencies:
+  - name: common
+    repository: oci://registry-1.docker.io/bitnamicharts
+    tags:
+      - bitnami-common
+    version: 2.36.0
+maintainers:
+  - name: Brawdunoir
+    email: yann.lacroix@avisto.com
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+    url: https://keybase.io/avistotelecom/pgp_keys.asc

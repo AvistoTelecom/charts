@@ -54,6 +54,24 @@ repos:
             --values=charts/cloudbeaver/values.yaml,
             --schema=charts/cloudbeaver/values.schema.json
           ]
+      - id: helm-readme-generator
+        pass_filenames: false
+        always_run: true
+        args:
+          [
+            --readme=charts/pinniped-concierge/README.md,
+            --values=charts/pinniped-concierge/values.yaml,
+            --schema=charts/pinniped-concierge/values.schema.json
+          ]
+      - id: helm-readme-generator
+        pass_filenames: false
+        always_run: true
+        args:
+          [
+            --readme=charts/pinniped-supervisor/README.md,
+            --values=charts/pinniped-supervisor/values.yaml,
+            --schema=charts/pinniped-supervisor/values.schema.json
+          ]
   - repo: local
     hooks:
       - id: check-app-version

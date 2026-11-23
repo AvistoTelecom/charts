@@ -1,0 +1,21 @@
+{{- if and .Values.httpRoute.enabled .Values.backendTLSPolicy.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: supervisor
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: {{ include "common.names.fullname" . }}
+      sectionName: https
+  validation:
+    {{- $validation := merge (deepCopy .Values.backendTLSPolicy.validation) (dict "hostname" (tpl .Values.httpRoute.hostname $)) }}
+    {{- toYaml $validation | nindent 4 }}
+{{- end }}

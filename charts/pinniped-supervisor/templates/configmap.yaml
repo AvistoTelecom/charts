@@ -1,0 +1,27 @@
+{{- include "pinniped-supervisor.validate" . -}}
+{{- $fullname := include "common.names.fullname" . -}}
+{{- $config := dict
+  "apiGroupSuffix" "pinniped.dev"
+  "aggregatedAPIServerPort" .Values.containerPorts.api
+  "aggregatedAPIServerDisableAdmissionPlugins" (list)
+  "endpoints" (dict "https" (dict "network" "tcp" "address" (printf ":%d" (int .Values.containerPorts.https))) "http" (dict "network" "disabled"))
+  "names" (dict
+    "defaultTLSCertificateSecret" (printf "%s-default-tls-certificate" $fullname)
+    "apiService" (include "pinniped-supervisor.apiServiceName" .))
+  "labels" (include "pinniped-supervisor.appLabel" . | fromYaml)
+  "tls" (dict "onedottwo" (dict "allowedCiphers" .Values.config.allowedCiphers))
+  "audit" (dict "logUsernamesAndGroups" .Values.config.logUsernamesAndGroups "logInternalPaths" .Values.config.logInternalPaths)
+-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: supervisor
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  pinniped.yaml: |
+    {{- mergeOverwrite $config .Values.config.extra | toYaml | nindent 4 }}

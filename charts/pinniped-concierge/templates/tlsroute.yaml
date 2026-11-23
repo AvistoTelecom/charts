@@ -1,0 +1,24 @@
+{{- if .Values.tlsRoute.enabled }}
+apiVersion: {{ .Values.tlsRoute.apiVersion }}
+kind: TLSRoute
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.tlsRoute.labels .Values.commonLabels ) "context" $ ) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: concierge
+  {{- if or .Values.tlsRoute.annotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.tlsRoute.annotations .Values.commonAnnotations ) "context" $ ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs: {{- tpl (toYaml .Values.tlsRoute.parentRefs) $ | nindent 4 }}
+  hostnames:
+    - {{ tpl .Values.tlsRoute.hostname $ | quote }}
+  rules:
+    - backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ include "pinniped-concierge.proxyServiceName" . }}
+          port: 443
+{{- end }}

@@ -1,0 +1,21 @@
+{{- /*
+The Supervisor patches spec.caBundle itself at runtime; GitOps tools should ignore that field.
+*/}}
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1alpha1.clientsecret.supervisor.pinniped.dev
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: supervisor
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  version: v1alpha1
+  group: clientsecret.supervisor.pinniped.dev
+  groupPriorityMinimum: 9900
+  versionPriority: 15
+  service:
+    name: {{ include "pinniped-supervisor.apiServiceName" . }}
+    namespace: {{ include "common.names.namespace" . | quote }}
+    port: 443
