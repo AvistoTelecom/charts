@@ -4,6 +4,8 @@
 
 This chart is built from the upstream `install-pinniped-concierge.yaml` release manifests, using the [Bitnami common](https://github.com/bitnami/charts/tree/main/bitnami/common) library.
 
+**Related chart:** [pinniped-supervisor](https://github.com/AvistoTelecom/charts/tree/main/charts/pinniped-supervisor) deploys the Pinniped Supervisor, the usual issuer a Concierge trusts. It is optional: any OIDC issuer works with a JWTAuthenticator.
+
 ## Installation
 
 Add repository
@@ -70,6 +72,70 @@ kubectl apply --server-side -f pinniped-concierge/crds/
 ```
 
 The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tools should ignore that field.
+
+## Quick start (Supervisor + Concierge)
+
+The usual setup: one Supervisor federating your identity provider, and one Concierge in each cluster that trusts it.
+
+```yaml
+# ---- supervisor-values.yaml (pinniped-supervisor chart) ----
+# Public endpoint of the Supervisor. The Gateway terminates TLS and re-encrypts
+# to the Supervisor (BackendTLSPolicy, enabled by default).
+httpRoute:
+  enabled: true
+  hostname: pinniped.example.com
+  parentRefs:
+    - name: main-gateway
+      namespace: gateway
+identityProviders:
+  oidc:
+    # Upstream IdP. Register https://pinniped.example.com/issuer/callback as redirect URI there.
+    # The Secret is yours to create in the release namespace:
+    #   type: secrets.pinniped.dev/oidc-client, keys: clientID, clientSecret
+    corporate-sso:
+      issuer: https://sso.example.com
+      authorizationConfig:
+        additionalScopes: [offline_access, email, groups]
+      claims:
+        username: email
+        groups: groups
+      client:
+        secretName: corporate-sso-client
+federationDomains:
+  # The issuer clusters trust. pinniped-tls holds a certificate for pinniped.example.com
+  # (e.g. issued by cert-manager) in the release namespace.
+  main:
+    issuer: https://pinniped.example.com/issuer
+    tls:
+      secretName: pinniped-tls
+    identityProviders:
+      - displayName: corporate-sso
+        objectRef:
+          apiGroup: idp.supervisor.pinniped.dev
+          kind: OIDCIdentityProvider
+          name: corporate-sso
+---
+# ---- concierge-values.yaml (pinniped-concierge chart, in each cluster) ----
+authenticators:
+  jwt:
+    supervisor:
+      issuer: https://pinniped.example.com/issuer  # the FederationDomain issuer
+      audience: prod-cluster-7f3a9c                 # unique per cluster
+```
+
+```sh
+helm install pinniped-supervisor avisto/pinniped-supervisor -n pinniped-supervisor --create-namespace -f supervisor-values.yaml
+
+kubectl create namespace pinniped-concierge
+kubectl label namespace pinniped-concierge pod-security.kubernetes.io/enforce=privileged
+helm install pinniped-concierge avisto/pinniped-concierge -n pinniped-concierge -f concierge-values.yaml
+
+# As cluster admin, generate a kubeconfig to hand out (needs the pinniped CLI)
+pinniped get kubeconfig > developer.kubeconfig
+# Users log in through their browser on first use. Grant them access with regular
+# RBAC bindings on their username (email) or groups.
+kubectl --kubeconfig developer.kubeconfig get pods
+```
 
 ## Parameters
 
