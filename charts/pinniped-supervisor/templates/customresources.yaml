@@ -1,0 +1,24 @@
+{{- /* One object per entry of each map: the key is metadata.name, the value is the spec (rendered with tpl). */}}
+{{- $idps := .Values.identityProviders }}
+{{- range $r := list
+  (dict "kind" "FederationDomain" "apiVersion" "config.supervisor.pinniped.dev/v1alpha1" "items" .Values.federationDomains)
+  (dict "kind" "OIDCClient" "apiVersion" "config.supervisor.pinniped.dev/v1alpha1" "items" .Values.oidcClients)
+  (dict "kind" "OIDCIdentityProvider" "apiVersion" "idp.supervisor.pinniped.dev/v1alpha1" "items" $idps.oidc)
+  (dict "kind" "LDAPIdentityProvider" "apiVersion" "idp.supervisor.pinniped.dev/v1alpha1" "items" $idps.ldap)
+  (dict "kind" "ActiveDirectoryIdentityProvider" "apiVersion" "idp.supervisor.pinniped.dev/v1alpha1" "items" $idps.activeDirectory)
+  (dict "kind" "GitHubIdentityProvider" "apiVersion" "idp.supervisor.pinniped.dev/v1alpha1" "items" $idps.github) }}
+{{- range $name, $spec := $r.items }}
+---
+apiVersion: {{ $r.apiVersion }}
+kind: {{ $r.kind }}
+metadata:
+  name: {{ $name }}
+  namespace: {{ include "common.names.namespace" $ | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: supervisor
+  {{- if $.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec: {{- include "common.tplvalues.render" ( dict "value" $spec "context" $ ) | nindent 2 }}
+{{- end }}
+{{- end }}

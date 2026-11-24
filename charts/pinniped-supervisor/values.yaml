@@ -113,6 +113,46 @@ backendTLSPolicy:
   validation:
     wellKnownCACertificates: System
 
+## @section Pinniped resources
+## Namespaced (release namespace) Supervisor resources, one per entry: the key is the object name, the value its spec (supports templates).
+## Secrets they reference (IdP client credentials, LDAP bind account, FederationDomain TLS) are not created by the chart.
+## ref: https://pinniped.dev/docs/reference/api/
+## @param federationDomains [object] FederationDomains
+## e.g:
+## federationDomains:
+##   main:
+##     issuer: https://pinniped.example.com/issuer
+##     tls:
+##       secretName: pinniped-example-com-tls
+##     identityProviders:
+##       - displayName: corporate-sso
+##         objectRef:
+##           apiGroup: idp.supervisor.pinniped.dev
+##           kind: OIDCIdentityProvider
+##           name: corporate-sso
+## @param oidcClients [object] OIDCClients (names must start with `client.oauth.pinniped.dev-`)
+## @param identityProviders.oidc [object] OIDCIdentityProviders
+## e.g:
+## oidc:
+##   corporate-sso:
+##     issuer: https://sso.example.com
+##     claims:
+##       username: email
+##       groups: groups
+##     client:
+##       secretName: corporate-sso-client   # type secrets.pinniped.dev/oidc-client
+## @param identityProviders.ldap [object] LDAPIdentityProviders
+## @param identityProviders.activeDirectory [object] ActiveDirectoryIdentityProviders
+## @param identityProviders.github [object] GitHubIdentityProviders
+##
+federationDomains: {}
+oidcClients: {}
+identityProviders:
+  oidc: {}
+  ldap: {}
+  activeDirectory: {}
+  github: {}
+
 ## @section Pod parameters
 
 ## @param resources [object] Container resource requests and limits (upstream defaults)

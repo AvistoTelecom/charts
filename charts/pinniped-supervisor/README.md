@@ -18,7 +18,7 @@ Install chart (one release per cluster: the CRDs and APIService are cluster-scop
 helm install pinniped-supervisor avisto/pinniped-supervisor --namespace pinniped-supervisor --create-namespace
 ```
 
-FederationDomains, identity providers and OIDCClients are not managed by this chart: create them with `extraDeploy` or separately.
+FederationDomains, identity providers and OIDCClients are declared in `federationDomains`, `identityProviders.*` and `oidcClients` (object name → spec, see the commented examples in `values.yaml`). The Secrets they reference are not created by the chart.
 
 ### Exposing the Supervisor through Gateway API
 
@@ -100,6 +100,17 @@ The Supervisor patches `spec.caBundle` of its APIService at runtime: GitOps tool
 | `httpRoute.parentRefs`        | Gateways the route attaches to                                                                                             | `[]`        |
 | `backendTLSPolicy.enabled`    | Create a BackendTLSPolicy so the Gateway talks HTTPS to the Supervisor (needed with httpRoute)                             | `true`      |
 | `backendTLSPolicy.validation` | BackendTLSPolicy `spec.validation` (`hostname` defaults to `httpRoute.hostname`). Use `caCertificateRefs` for a private CA | `{}`        |
+
+### Pinniped resources
+
+| Name                                | Description                                                      | Value |
+| ----------------------------------- | ---------------------------------------------------------------- | ----- |
+| `federationDomains`                 | FederationDomains                                                | `{}`  |
+| `oidcClients`                       | OIDCClients (names must start with `client.oauth.pinniped.dev-`) | `{}`  |
+| `identityProviders.oidc`            | OIDCIdentityProviders                                            | `{}`  |
+| `identityProviders.ldap`            | LDAPIdentityProviders                                            | `{}`  |
+| `identityProviders.activeDirectory` | ActiveDirectoryIdentityProviders                                 | `{}`  |
+| `identityProviders.github`          | GitHubIdentityProviders                                          | `{}`  |
 
 ### Pod parameters
 

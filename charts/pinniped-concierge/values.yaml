@@ -116,6 +116,27 @@ tlsRoute:
   labels: {}
   annotations: {}
 
+## @section Authenticators
+## Cluster-scoped authenticators, one per entry: the key is the object name, the value its spec (supports templates).
+## ref: https://pinniped.dev/docs/reference/api/
+## @param authenticators.jwt [object] JWTAuthenticators, e.g. one trusting a Pinniped Supervisor FederationDomain
+## e.g:
+## jwt:
+##   supervisor:
+##     issuer: https://pinniped.example.com/issuer
+##     audience: my-cluster-0f8a3b
+##     tls:
+##       certificateAuthorityData: <base64 CA, omit for public CAs>
+## @param authenticators.webhook [object] WebhookAuthenticators
+## e.g:
+## webhook:
+##   my-webhook:
+##     endpoint: https://webhook.example.com/authenticate
+##
+authenticators:
+  jwt: {}
+  webhook: {}
+
 ## @section Pod parameters
 
 ## @param resources [object] Container resource requests and limits (upstream defaults)

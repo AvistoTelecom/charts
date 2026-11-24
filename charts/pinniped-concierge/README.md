@@ -20,6 +20,8 @@ helm install pinniped-concierge avisto/pinniped-concierge --namespace pinniped-c
 
 The Concierge spawns kube-cert-agent pods with `hostPath` volumes on control-plane nodes: the release namespace must allow the `privileged` Pod Security Standard.
 
+JWTAuthenticators and WebhookAuthenticators are declared in `authenticators.jwt` / `authenticators.webhook` (object name → spec, see the commented examples in `values.yaml`).
+
 ### Exposing the impersonation proxy through Gateway API
 
 Instead of the LoadBalancer Service the Concierge creates by default, the impersonation proxy can be exposed with a `TLSRoute`:
@@ -125,6 +127,13 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 | `tlsRoute.parentRefs`  | Gateways (and passthrough listener sectionName) the route attaches to                                              | `[]`                           |
 | `tlsRoute.labels`      | Additional labels for the TLSRoute                                                                                 | `{}`                           |
 | `tlsRoute.annotations` | Additional annotations for the TLSRoute                                                                            | `{}`                           |
+
+### Authenticators
+
+| Name                     | Description                                                                 | Value |
+| ------------------------ | --------------------------------------------------------------------------- | ----- |
+| `authenticators.jwt`     | JWTAuthenticators, e.g. one trusting a Pinniped Supervisor FederationDomain | `{}`  |
+| `authenticators.webhook` | WebhookAuthenticators                                                       | `{}`  |
 
 ### Pod parameters
 
