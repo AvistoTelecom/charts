@@ -130,47 +130,6 @@
                 }
             }
         },
-        "containerPorts": {
-            "type": "object",
-            "properties": {
-                "https": {
-                    "type": "number",
-                    "description": "Port of the OIDC/FederationDomain HTTPS endpoint (Pinniped default)",
-                    "default": 8443
-                },
-                "api": {
-                    "type": "number",
-                    "description": "Port of the aggregated API server (Pinniped default)",
-                    "default": 10250
-                }
-            }
-        },
-        "config": {
-            "type": "object",
-            "properties": {
-                "logUsernamesAndGroups": {
-                    "type": "string",
-                    "description": "Audit log usernames and groups (enabled, disabled)",
-                    "default": "disabled"
-                },
-                "logInternalPaths": {
-                    "type": "string",
-                    "description": "Audit log internal paths such as /healthz (enabled, disabled)",
-                    "default": "disabled"
-                },
-                "allowedCiphers": {
-                    "type": "array",
-                    "description": "TLS 1.2 ciphers allowed (empty means Pinniped defaults)",
-                    "default": [],
-                    "items": {}
-                },
-                "extra": {
-                    "type": "object",
-                    "description": "Extra keys merged (overwriting) into the generated pinniped.yaml",
-                    "default": {}
-                }
-            }
-        },
         "service": {
             "type": "object",
             "properties": {

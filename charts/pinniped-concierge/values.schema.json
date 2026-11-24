@@ -130,57 +130,6 @@
                 }
             }
         },
-        "containerPorts": {
-            "type": "object",
-            "properties": {
-                "api": {
-                    "type": "number",
-                    "description": "Port of the aggregated API server (Pinniped default, also used by probes)",
-                    "default": 10250
-                },
-                "proxy": {
-                    "type": "number",
-                    "description": "Port of the impersonation proxy (Pinniped default)",
-                    "default": 8444
-                }
-            }
-        },
-        "config": {
-            "type": "object",
-            "properties": {
-                "apiServingCertificate": {
-                    "type": "object",
-                    "properties": {
-                        "durationSeconds": {
-                            "type": "number",
-                            "description": "Lifetime of the aggregated API serving certificate",
-                            "default": 2592000
-                        },
-                        "renewBeforeSeconds": {
-                            "type": "number",
-                            "description": "Renew the aggregated API serving certificate this long before expiry",
-                            "default": 2160000
-                        }
-                    }
-                },
-                "logUsernamesAndGroups": {
-                    "type": "string",
-                    "description": "Audit log usernames and groups (enabled, disabled)",
-                    "default": "disabled"
-                },
-                "allowedCiphers": {
-                    "type": "array",
-                    "description": "TLS 1.2 ciphers allowed (empty means Pinniped defaults)",
-                    "default": [],
-                    "items": {}
-                },
-                "extra": {
-                    "type": "object",
-                    "description": "Extra keys merged (overwriting) into the generated pinniped.yaml",
-                    "default": {}
-                }
-            }
-        },
         "impersonationProxy": {
             "type": "object",
             "properties": {

@@ -59,28 +59,21 @@ revisionHistoryLimit: 10
 updateStrategy:
   type: RollingUpdate
 
-## @param containerPorts.api Port of the aggregated API server (Pinniped default, also used by probes)
-## @param containerPorts.proxy Port of the impersonation proxy (Pinniped default)
-##
-containerPorts:
-  api: 10250
-  proxy: 8444
-
-## Concierge static configuration (pinniped.yaml). Names, labels and the kube-cert-agent image are derived from the release.
+## Concierge static configuration (pinniped.yaml body). The chart merges the release-derived `apiGroupSuffix`, `names`, `labels` and `kubeCertAgent` keys on top.
 ## ref: https://github.com/vmware-tanzu/pinniped/blob/main/deploy/concierge/values.yaml
-## @param config.apiServingCertificate.durationSeconds Lifetime of the aggregated API serving certificate
-## @param config.apiServingCertificate.renewBeforeSeconds Renew the aggregated API serving certificate this long before expiry
-## @param config.logUsernamesAndGroups Audit log usernames and groups (enabled, disabled)
-## @param config.allowedCiphers TLS 1.2 ciphers allowed (empty means Pinniped defaults)
-## @param config.extra Extra keys merged (overwriting) into the generated pinniped.yaml
+## @param config [object] Concierge pinniped.yaml settings (upstream defaults)
 ##
 config:
-  apiServingCertificate:
-    durationSeconds: 2592000
-    renewBeforeSeconds: 2160000
-  logUsernamesAndGroups: disabled
-  allowedCiphers: []
-  extra: {}
+  api:
+    servingCertificate:
+      durationSeconds: 2592000
+      renewBeforeSeconds: 2160000
+  aggregatedAPIServerDisableAdmissionPlugins: []
+  tls:
+    onedottwo:
+      allowedCiphers: []
+  audit:
+    logUsernamesAndGroups: disabled
 
 ## @section Impersonation proxy parameters
 ## Rendered into the CredentialIssuer spec.impersonationProxy

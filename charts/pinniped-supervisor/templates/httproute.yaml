@@ -17,27 +17,9 @@ spec:
   hostnames:
     - {{ tpl .Values.httpRoute.hostname $ | quote }}
   rules:
-  {{- range $ruleIdx, $rule := .Values.httpRoute.rules }}
-    - matches:
-      {{- tpl (toYaml $rule.matches) $ | nindent 8 }}
-      {{- if $rule.backendRefs }}
-      backendRefs:
-      {{- tpl (toYaml $rule.backendRefs) $ | nindent 8 }}
-      {{- else }}
-      backendRefs:
-        - group: ''
+    - backendRefs:
+        - group: ""
           kind: Service
-          name: {{ include "common.names.fullname" $ }}
-          port: {{ $.Values.service.ports.https }}
-          weight: 1
-      {{- end }}
-      {{- if $rule.filters }}
-      filters:
-      {{- tpl (toYaml $rule.filters) $ | nindent 8 }}
-      {{- end }}
-      {{- if $rule.timeouts }}
-      timeouts:
-      {{- tpl (toYaml $rule.timeouts) $ | nindent 8 }}
-      {{- end }}
-  {{- end }}
+          name: {{ include "common.names.fullname" . }}
+          port: {{ .Values.service.ports.https }}
 {{- end }}

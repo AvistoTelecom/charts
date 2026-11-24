@@ -58,25 +58,18 @@ revisionHistoryLimit: 10
 updateStrategy:
   type: RollingUpdate
 
-## @param containerPorts.https Port of the OIDC/FederationDomain HTTPS endpoint (Pinniped default)
-## @param containerPorts.api Port of the aggregated API server (Pinniped default)
-##
-containerPorts:
-  https: 8443
-  api: 10250
-
-## Supervisor static configuration (pinniped.yaml). Names and labels are derived from the release.
+## Supervisor static configuration (pinniped.yaml body). The chart merges the release-derived `apiGroupSuffix`, `names` and `labels` keys on top.
 ## ref: https://github.com/vmware-tanzu/pinniped/blob/main/deploy/supervisor/values.yaml
-## @param config.logUsernamesAndGroups Audit log usernames and groups (enabled, disabled)
-## @param config.logInternalPaths Audit log internal paths such as /healthz (enabled, disabled)
-## @param config.allowedCiphers TLS 1.2 ciphers allowed (empty means Pinniped defaults)
-## @param config.extra Extra keys merged (overwriting) into the generated pinniped.yaml
+## @param config [object] Supervisor pinniped.yaml settings (upstream defaults)
 ##
 config:
-  logUsernamesAndGroups: disabled
-  logInternalPaths: disabled
-  allowedCiphers: []
-  extra: {}
+  aggregatedAPIServerDisableAdmissionPlugins: []
+  tls:
+    onedottwo:
+      allowedCiphers: []
+  audit:
+    logUsernamesAndGroups: disabled
+    logInternalPaths: disabled
 
 ## @section Traffic exposure parameters
 
@@ -103,8 +96,6 @@ service:
 ## parentRefs:
 ##   - name: main-gateway
 ##     namespace: gateway
-## @skip httpRoute.rules
-## @param httpRoute.rules HTTPRoute rules. `backendRefs` defaults to the Supervisor Service
 ##
 httpRoute:
   enabled: false
@@ -112,11 +103,6 @@ httpRoute:
   annotations: {}
   labels: {}
   parentRefs: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
 
 ## The Gateway re-encrypts towards the Supervisor, which only speaks HTTPS.
 ## @param backendTLSPolicy.enabled Create a BackendTLSPolicy so the Gateway talks HTTPS to the Supervisor (needed with httpRoute)

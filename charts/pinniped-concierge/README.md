@@ -93,24 +93,18 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 
 ### Pinniped Concierge parameters
 
-| Name                                              | Description                                                                     | Value                                                                     |
-| ------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `image.registry`                                  | Pinniped image registry                                                         | `ghcr.io`                                                                 |
-| `image.repository`                                | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
-| `image.tag`                                       | Pinniped image tag                                                              | `v0.48.0`                                                                 |
-| `image.digest`                                    | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
-| `image.pullPolicy`                                | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
-| `image.pullSecrets`                               | Pinniped image pull secrets (also given to the kube-cert-agent pods)            | `[]`                                                                      |
-| `replicaCount`                                    | Number of Concierge replicas                                                    | `2`                                                                       |
-| `revisionHistoryLimit`                            | Number of old ReplicaSets to retain                                             | `10`                                                                      |
-| `updateStrategy.type`                             | Deployment strategy type                                                        | `RollingUpdate`                                                           |
-| `containerPorts.api`                              | Port of the aggregated API server (Pinniped default, also used by probes)       | `10250`                                                                   |
-| `containerPorts.proxy`                            | Port of the impersonation proxy (Pinniped default)                              | `8444`                                                                    |
-| `config.apiServingCertificate.durationSeconds`    | Lifetime of the aggregated API serving certificate                              | `2592000`                                                                 |
-| `config.apiServingCertificate.renewBeforeSeconds` | Renew the aggregated API serving certificate this long before expiry            | `2160000`                                                                 |
-| `config.logUsernamesAndGroups`                    | Audit log usernames and groups (enabled, disabled)                              | `disabled`                                                                |
-| `config.allowedCiphers`                           | TLS 1.2 ciphers allowed (empty means Pinniped defaults)                         | `[]`                                                                      |
-| `config.extra`                                    | Extra keys merged (overwriting) into the generated pinniped.yaml                | `{}`                                                                      |
+| Name                   | Description                                                                     | Value                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `image.registry`       | Pinniped image registry                                                         | `ghcr.io`                                                                 |
+| `image.repository`     | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
+| `image.tag`            | Pinniped image tag                                                              | `v0.48.0`                                                                 |
+| `image.digest`         | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
+| `image.pullPolicy`     | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
+| `image.pullSecrets`    | Pinniped image pull secrets (also given to the kube-cert-agent pods)            | `[]`                                                                      |
+| `replicaCount`         | Number of Concierge replicas                                                    | `2`                                                                       |
+| `revisionHistoryLimit` | Number of old ReplicaSets to retain                                             | `10`                                                                      |
+| `updateStrategy.type`  | Deployment strategy type                                                        | `RollingUpdate`                                                           |
+| `config`               | Concierge pinniped.yaml settings (upstream defaults)                            | `{}`                                                                      |
 
 ### Impersonation proxy parameters
 

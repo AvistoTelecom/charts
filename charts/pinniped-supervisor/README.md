@@ -72,23 +72,18 @@ The Supervisor patches `spec.caBundle` of its APIService at runtime: GitOps tool
 
 ### Pinniped Supervisor parameters
 
-| Name                           | Description                                                                     | Value                                                                     |
-| ------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `image.registry`               | Pinniped image registry                                                         | `ghcr.io`                                                                 |
-| `image.repository`             | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
-| `image.tag`                    | Pinniped image tag                                                              | `v0.48.0`                                                                 |
-| `image.digest`                 | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
-| `image.pullPolicy`             | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
-| `image.pullSecrets`            | Pinniped image pull secrets                                                     | `[]`                                                                      |
-| `replicaCount`                 | Number of Supervisor replicas                                                   | `2`                                                                       |
-| `revisionHistoryLimit`         | Number of old ReplicaSets to retain                                             | `10`                                                                      |
-| `updateStrategy.type`          | Deployment strategy type                                                        | `RollingUpdate`                                                           |
-| `containerPorts.https`         | Port of the OIDC/FederationDomain HTTPS endpoint (Pinniped default)             | `8443`                                                                    |
-| `containerPorts.api`           | Port of the aggregated API server (Pinniped default)                            | `10250`                                                                   |
-| `config.logUsernamesAndGroups` | Audit log usernames and groups (enabled, disabled)                              | `disabled`                                                                |
-| `config.logInternalPaths`      | Audit log internal paths such as /healthz (enabled, disabled)                   | `disabled`                                                                |
-| `config.allowedCiphers`        | TLS 1.2 ciphers allowed (empty means Pinniped defaults)                         | `[]`                                                                      |
-| `config.extra`                 | Extra keys merged (overwriting) into the generated pinniped.yaml                | `{}`                                                                      |
+| Name                   | Description                                                                     | Value                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `image.registry`       | Pinniped image registry                                                         | `ghcr.io`                                                                 |
+| `image.repository`     | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
+| `image.tag`            | Pinniped image tag                                                              | `v0.48.0`                                                                 |
+| `image.digest`         | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
+| `image.pullPolicy`     | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
+| `image.pullSecrets`    | Pinniped image pull secrets                                                     | `[]`                                                                      |
+| `replicaCount`         | Number of Supervisor replicas                                                   | `2`                                                                       |
+| `revisionHistoryLimit` | Number of old ReplicaSets to retain                                             | `10`                                                                      |
+| `updateStrategy.type`  | Deployment strategy type                                                        | `RollingUpdate`                                                           |
+| `config`               | Supervisor pinniped.yaml settings (upstream defaults)                           | `{}`                                                                      |
 
 ### Traffic exposure parameters
 
@@ -103,7 +98,6 @@ The Supervisor patches `spec.caBundle` of its APIService at runtime: GitOps tool
 | `httpRoute.annotations`       | Additional annotations for the HTTPRoute                                                                                   | `{}`        |
 | `httpRoute.labels`            | Additional labels for the HTTPRoute                                                                                        | `{}`        |
 | `httpRoute.parentRefs`        | Gateways the route attaches to                                                                                             | `[]`        |
-| `httpRoute.rules`             | HTTPRoute rules. `backendRefs` defaults to the Supervisor Service                                                          | `undefined` |
 | `backendTLSPolicy.enabled`    | Create a BackendTLSPolicy so the Gateway talks HTTPS to the Supervisor (needed with httpRoute)                             | `true`      |
 | `backendTLSPolicy.validation` | BackendTLSPolicy `spec.validation` (`hostname` defaults to `httpRoute.hostname`). Use `caCertificateRefs` for a private CA | `{}`        |
 

@@ -6,26 +6,22 @@ Pinniped image, shared by the Concierge and the kube-cert-agent pods it spawns
 {{- end -}}
 
 {{/*
-Name helpers. Pinniped needs to know the names of the objects it manages, so they all derive from the fullname.
+Names Pinniped is told about in its config, all derived from the fullname.
 */}}
-{{- define "pinniped-concierge.name" -}}
-{{- printf "%s-%s" (include "common.names.fullname" .context) .suffix | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "pinniped-concierge.apiServiceName" -}}
-{{ include "pinniped-concierge.name" (dict "context" . "suffix" "api") }}
+{{- printf "%s-api" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "pinniped-concierge.proxyServiceName" -}}
-{{ include "pinniped-concierge.name" (dict "context" . "suffix" "proxy") }}
+{{- printf "%s-proxy" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "pinniped-concierge.agentServiceAccountName" -}}
-{{ include "pinniped-concierge.name" (dict "context" . "suffix" "kube-cert-agent") }}
+{{- printf "%s-kube-cert-agent" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "pinniped-concierge.impersonationServiceAccountName" -}}
-{{ include "pinniped-concierge.name" (dict "context" . "suffix" "impersonation-proxy") }}
+{{- printf "%s-impersonation-proxy" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*

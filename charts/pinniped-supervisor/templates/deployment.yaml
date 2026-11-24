@@ -65,10 +65,10 @@ spec:
           {{- end }}
           ports:
             - name: https
-              containerPort: {{ .Values.containerPorts.https }}
+              containerPort: 8443
               protocol: TCP
             - name: https-api
-              containerPort: {{ .Values.containerPorts.api }}
+              containerPort: 10250
               protocol: TCP
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 12 }}
