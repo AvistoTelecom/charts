@@ -35,10 +35,15 @@ backendTLSPolicy:
 
 ### Upgrading
 
-Helm does not upgrade CRDs placed in `crds/`. When bumping the chart, apply them first:
+Helm installs the CRDs placed in `crds/` but never upgrades them:
+
+- **Argo CD** applies them on every sync, nothing to do.
+- **Flux** upgrades them with `spec.install.crds: CreateReplace` and `spec.upgrade.crds: CreateReplace` on the HelmRelease.
+- **Plain Helm / helmfile**: apply them before bumping the chart:
 
 ```
-kubectl apply --server-side -f charts/pinniped-supervisor/crds/
+helm pull avisto/pinniped-supervisor --version <version> --untar
+kubectl apply --server-side -f pinniped-supervisor/crds/
 ```
 
 The Supervisor patches `spec.caBundle` of its APIService at runtime: GitOps tools should ignore that field.

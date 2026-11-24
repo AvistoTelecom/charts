@@ -56,10 +56,15 @@ The Concierge generates the serving certificate for `concierge.example.com` itse
 
 ### Upgrading
 
-Helm does not upgrade CRDs placed in `crds/`. When bumping the chart, apply them first:
+Helm installs the CRDs placed in `crds/` but never upgrades them:
+
+- **Argo CD** applies them on every sync, nothing to do.
+- **Flux** upgrades them with `spec.install.crds: CreateReplace` and `spec.upgrade.crds: CreateReplace` on the HelmRelease.
+- **Plain Helm / helmfile**: apply them before bumping the chart:
 
 ```
-kubectl apply --server-side -f charts/pinniped-concierge/crds/
+helm pull avisto/pinniped-concierge --version <version> --untar
+kubectl apply --server-side -f pinniped-concierge/crds/
 ```
 
 The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tools should ignore that field.
