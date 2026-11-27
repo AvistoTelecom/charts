@@ -181,12 +181,13 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 
 ### Impersonation proxy parameters
 
-| Name                                  | Description                                                                                                                                                                                                                    | Value  |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
-| `impersonationProxy.mode`             | Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true` | `auto` |
-| `impersonationProxy.externalEndpoint` | Endpoint advertised to clients. Defaults to `tlsRoute.hostname` when the TLSRoute is enabled                                                                                                                                   | `""`   |
-| `impersonationProxy.service`          | Service created by the Concierge itself. Ignored (forced to `type: None`) when `tlsRoute.enabled=true`                                                                                                                         | `{}`   |
-| `impersonationProxy.tls`              | Optional TLS settings (`secretName`, `certificateAuthorityData`). When empty the Concierge generates its own CA                                                                                                                | `{}`   |
+| Name                                     | Description                                                                                                                                                                                                                    | Value          |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| `impersonationProxy.mode`                | Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true` | `auto`         |
+| `impersonationProxy.externalEndpoint`    | Endpoint advertised to clients. Defaults to `tlsRoute.hostname` when the TLSRoute is enabled                                                                                                                                   | `""`           |
+| `impersonationProxy.service.type`        | Type of the Service the Concierge creates for the proxy (LoadBalancer, ClusterIP, None). Forced to `None` when `tlsRoute.enabled=true`                                                                                         | `LoadBalancer` |
+| `impersonationProxy.service.annotations` | Annotations for that Service                                                                                                                                                                                                   | `{}`           |
+| `impersonationProxy.tls`                 | Optional TLS settings (`secretName`, `certificateAuthorityData`). When empty the Concierge generates its own CA                                                                                                                | `{}`           |
 
 ### TLSRoute parameters
 
