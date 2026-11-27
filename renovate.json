@@ -1,0 +1,70 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["helm-values", "custom.regex"],
+  "includePaths": ["charts/cloudbeaver/**", "charts/pinniped-concierge/**"],
+  "labels": ["upstream-release"],
+  "reviewers": ["Brawdunoir"],
+  "automerge": false,
+  "customManagers": [
+    {
+      "description": "Chart.yaml appVersion follows the cloudbeaver image tag",
+      "customType": "regex",
+      "managerFilePatterns": ["/^charts/cloudbeaver/Chart\\.yaml$/"],
+      "matchStrings": ["appVersion: \"?(?<currentValue>[^\\s\"]+)\"?"],
+      "depNameTemplate": "docker.io/dbeaver/cloudbeaver",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Chart.yaml appVersion and icon URL follow the pinniped image tag",
+      "customType": "regex",
+      "managerFilePatterns": ["/^charts/pinniped-concierge/Chart\\.yaml$/"],
+      "matchStrings": [
+        "appVersion: \"?(?<currentValue>[^\\s\"]+)\"?",
+        "refs/tags/(?<currentValue>v[^/]+)/"
+      ],
+      "matchStringsStrategy": "any",
+      "depNameTemplate": "ghcr.io/vmware/pinniped/pinniped-server",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "readme-generator [default: ...] annotation on pinniped image.tag",
+      "customType": "regex",
+      "managerFilePatterns": ["/^charts/pinniped-concierge/values\\.yaml$/"],
+      "matchStrings": ["@param image\\.tag \\[default: (?<currentValue>[^\\]]+)\\]"],
+      "depNameTemplate": "ghcr.io/vmware/pinniped/pinniped-server",
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["helm-values"],
+      "bumpVersion": "patch"
+    },
+    {
+      "matchFileNames": ["charts/cloudbeaver/**"],
+      "groupName": "cloudbeaver",
+      "postUpgradeTasks": {
+        "commands": [
+          "npx -y @bitnami/readme-generator-for-helm@2.7.0 --readme=charts/cloudbeaver/README.md --values=charts/cloudbeaver/values.yaml --schema=charts/cloudbeaver/values.schema.json"
+        ],
+        "fileFilters": ["charts/cloudbeaver/README.md", "charts/cloudbeaver/values.schema.json"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchFileNames": ["charts/pinniped-concierge/**"],
+      "groupName": "pinniped-concierge",
+      "prBodyNotes": [
+        "⚠️ `crds/` and `templates/rbac.yaml` are copied from upstream `install-pinniped-concierge.yaml`. Diff them against the new release and re-sync before merging."
+      ],
+      "postUpgradeTasks": {
+        "commands": [
+          "npx -y @bitnami/readme-generator-for-helm@2.7.0 --readme=charts/pinniped-concierge/README.md --values=charts/pinniped-concierge/values.yaml --schema=charts/pinniped-concierge/values.schema.json"
+        ],
+        "fileFilters": ["charts/pinniped-concierge/README.md", "charts/pinniped-concierge/values.schema.json"],
+        "executionMode": "branch"
+      }
+    }
+  ]
+}
