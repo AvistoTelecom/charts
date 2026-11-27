@@ -4,7 +4,6 @@
   "enabledManagers": ["helm-values", "custom.regex"],
   "includePaths": ["charts/cloudbeaver/**", "charts/pinniped-concierge/**"],
   "labels": ["upstream-release"],
-  "reviewers": ["Brawdunoir"],
   "automerge": false,
   "customManagers": [
     {
