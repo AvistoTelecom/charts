@@ -74,6 +74,16 @@
             "default": [],
             "items": {}
         },
+        "crds": {
+            "type": "object",
+            "properties": {
+                "install": {
+                    "type": "boolean",
+                    "description": "Render the Concierge CRDs as regular templates (annotated `helm.sh/resource-policy: keep`, so `helm uninstall` leaves them and their objects in place). Disable when the CRDs are managed outside this release",
+                    "default": true
+                }
+            }
+        },
         "image": {
             "type": "object",
             "properties": {

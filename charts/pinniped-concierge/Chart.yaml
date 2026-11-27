@@ -2,7 +2,7 @@ apiVersion: v2
 name: pinniped-concierge
 description: Pinniped Concierge - credential exchange and impersonation proxy for Kubernetes clusters
 type: application
-version: 0.1.0
+version: 0.2.0
 appVersion: v0.48.0
 home: https://pinniped.dev
 icon: https://raw.githubusercontent.com/vmware/pinniped/refs/tags/v0.48.0/site/themes/pinniped/static/img/logo.svg
