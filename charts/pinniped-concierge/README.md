@@ -38,7 +38,13 @@ tlsRoute:
       sectionName: tls-passthrough
 ```
 
-The impersonation proxy authenticates clients with TLS client certificates, so TLS cannot be terminated by the Gateway (an `HTTPRoute` does not work). The parent Gateway needs a passthrough listener, and the cluster needs the `TLSRoute` CRD (standard channel in recent Gateway API releases):
+Why a `TLSRoute` and not an `HTTPRoute`: users authenticate to the impersonation proxy with TLS client certificates, so the Gateway must forward TLS untouched instead of terminating it.
+
+Requirements:
+
+- the `TLSRoute` CRD, in the standard channel since Gateway API v1.5.0
+- a Gateway controller that supports TLS passthrough (tested with Istio 1.30)
+- a passthrough listener on the parent Gateway, matching `tlsRoute.hostname` and `sectionName`:
 
 ```yaml
 - name: tls-passthrough
@@ -46,13 +52,18 @@ The impersonation proxy authenticates clients with TLS client certificates, so T
   port: 443
   protocol: TLS
   tls:
-    mode: Passthrough
+    mode: Passthrough   # TLS reaches the Concierge pods untouched
   allowedRoutes:
     kinds:
       - kind: TLSRoute
-    namespaces:
-      from: All
+    namespaces:         # only the Concierge release namespace may attach
+      from: Selector
+      selector:
+        matchLabels:
+          kubernetes.io/metadata.name: pinniped-concierge
 ```
+
+If external-dns manages your records, note that it does not read `TLSRoute` hostnames by default (enable its `gateway-tlsroute` source, or create the record another way).
 
 The Concierge generates the serving certificate for `concierge.example.com` itself and publishes its CA in the CredentialIssuer status, where `pinniped get kubeconfig` picks it up. Set `impersonationProxy.tls.secretName` to use your own certificate instead.
 
