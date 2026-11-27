@@ -40,6 +40,7 @@
     {
       "matchFileNames": ["charts/cloudbeaver/**"],
       "groupName": "cloudbeaver",
+      "changelogUrl": "https://github.com/dbeaver/cloudbeaver/blob/devel/README.md#changelog",
       "postUpgradeTasks": {
         "commands": [
           "scripts/renovate-post-upgrade.sh charts/cloudbeaver"
@@ -51,6 +52,7 @@
     {
       "matchFileNames": ["charts/pinniped-concierge/**"],
       "groupName": "pinniped-concierge",
+      "sourceUrl": "https://github.com/vmware/pinniped",
       "prBodyNotes": [
         "⚠️ `crds/` and `templates/rbac.yaml` are copied from upstream `install-pinniped-concierge.yaml`. Diff them against the new release and re-sync before merging."
       ],

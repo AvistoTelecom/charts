@@ -36,3 +36,22 @@ jobs:
           RENOVATE_PLATFORM_COMMIT: enabled
           RENOVATE_ALLOWED_COMMANDS: '["^scripts/renovate-post-upgrade\\.sh charts/[a-z0-9-]+$"]'
           LOG_LEVEL: info
+
+      # CloudBeaver has no GitHub releases (Renovate can't embed notes); its changelog lives in README.md.
+      - name: Comment CloudBeaver changelog on Renovate PR
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for pr in $(gh pr list --head renovate/cloudbeaver --json number --jq '.[].number'); do
+            diff=$(gh pr diff "$pr")
+            old=$(sed -n 's/^-appVersion: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' <<<"$diff")
+            new=$(sed -n 's/^+appVersion: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' <<<"$diff")
+            marker="<!-- cloudbeaver-changelog:$new -->"
+            gh pr view "$pr" --json comments --jq '.comments[].body' | grep -qF "$marker" && continue
+            # Every section from the new version down to (excluding) the current one.
+            notes=$(curl -sfL https://raw.githubusercontent.com/dbeaver/cloudbeaver/devel/README.md |
+              awk -v new="### $new " -v old="### $old " 'index($0, new) == 1 {f = 1} index($0, old) == 1 {exit} f')
+            [[ -n "$notes" ]] || { echo "::warning::No changelog found for CloudBeaver $new"; continue; }
+            gh pr comment "$pr" --body "$(printf '%s\n## CloudBeaver changelog (%s → %s)\n\n%s\n\n_Source: [README changelog](https://github.com/dbeaver/cloudbeaver/blob/devel/README.md#changelog)_' "$marker" "$old" "$new" "$notes")"
+          done
