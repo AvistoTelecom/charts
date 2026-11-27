@@ -132,21 +132,6 @@ The Concierge generates the serving certificate for `concierge.example.com` itse
 
 The CRDs are regular templates (`crds.install`, enabled by default), so every `helm upgrade` or GitOps sync updates them along with the chart. With `crds.keep` (enabled by default) they carry `helm.sh/resource-policy: keep`: `helm uninstall` leaves them, and the authenticators they hold, in place.
 
-### From 0.1.x
-
-0.1.x shipped the CRDs in `crds/`, which Helm never adopts. Before upgrading a plain Helm / helmfile release, hand them over to it:
-
-```
-for crd in jwtauthenticators.authentication.concierge.pinniped.dev \
-           webhookauthenticators.authentication.concierge.pinniped.dev \
-           credentialissuers.config.concierge.pinniped.dev; do
-  kubectl label crd "$crd" app.kubernetes.io/managed-by=Helm
-  kubectl annotate crd "$crd" meta.helm.sh/release-name=<release> meta.helm.sh/release-namespace=<namespace>
-done
-```
-
-Argo CD and Flux need nothing.
-
 The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tools should ignore that field.
 
 ## Parameters
