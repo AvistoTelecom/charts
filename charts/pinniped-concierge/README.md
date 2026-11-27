@@ -1,6 +1,6 @@
 # Pinniped Concierge
 
-[Pinniped](https://pinniped.dev) Concierge lets users authenticate to a Kubernetes cluster with external credentials (e.g. tokens issued by a Pinniped Supervisor). It exchanges them for cluster credentials, either through the kube-cert-agent (clusters with reachable control-plane nodes) or through its impersonation proxy.
+[Pinniped](https://pinniped.dev) Concierge lets users authenticate to a Kubernetes cluster with external credentials (e.g. tokens issued by an OIDC provider or a Pinniped Supervisor). It exchanges them for cluster credentials, either through the kube-cert-agent (clusters with reachable control-plane nodes) or through its impersonation proxy.
 
 This chart is built from the upstream `install-pinniped-concierge.yaml` release manifests, using the [Bitnami common](https://github.com/bitnami/charts/tree/main/bitnami/common) library.
 
