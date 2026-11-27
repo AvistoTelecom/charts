@@ -115,11 +115,6 @@
             "description": "Number of Concierge replicas",
             "default": 2
         },
-        "revisionHistoryLimit": {
-            "type": "number",
-            "description": "Number of old ReplicaSets to retain",
-            "default": 10
-        },
         "updateStrategy": {
             "type": "object",
             "properties": {
@@ -188,23 +183,6 @@
                     "type": "boolean",
                     "description": "Enable pod Security Context",
                     "default": true
-                },
-                "fsGroupChangePolicy": {
-                    "type": "string",
-                    "description": "Set filesystem group change policy",
-                    "default": "Always"
-                },
-                "sysctls": {
-                    "type": "array",
-                    "description": "Set kernel settings using the sysctl interface",
-                    "default": [],
-                    "items": {}
-                },
-                "supplementalGroups": {
-                    "type": "array",
-                    "description": "Set filesystem extra groups",
-                    "default": [],
-                    "items": {}
                 },
                 "runAsUser": {
                     "type": "number",

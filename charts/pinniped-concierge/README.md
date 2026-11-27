@@ -167,18 +167,17 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 
 ### Pinniped Concierge parameters
 
-| Name                   | Description                                                                     | Value                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `image.registry`       | Pinniped image registry                                                         | `ghcr.io`                                                                 |
-| `image.repository`     | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
-| `image.tag`            | Pinniped image tag                                                              | `v0.48.0`                                                                 |
-| `image.digest`         | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
-| `image.pullPolicy`     | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
-| `image.pullSecrets`    | Pinniped image pull secrets (also given to the kube-cert-agent pods)            | `[]`                                                                      |
-| `replicaCount`         | Number of Concierge replicas                                                    | `2`                                                                       |
-| `revisionHistoryLimit` | Number of old ReplicaSets to retain                                             | `10`                                                                      |
-| `updateStrategy.type`  | Deployment strategy type                                                        | `RollingUpdate`                                                           |
-| `config`               | Concierge pinniped.yaml settings (upstream defaults)                            | `{}`                                                                      |
+| Name                  | Description                                                                     | Value                                                                     |
+| --------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `image.registry`      | Pinniped image registry                                                         | `ghcr.io`                                                                 |
+| `image.repository`    | Pinniped image repository                                                       | `vmware/pinniped/pinniped-server`                                         |
+| `image.tag`           | Pinniped image tag                                                              | `v0.48.0`                                                                 |
+| `image.digest`        | Pinniped image digest in the form sha256:aa.... (takes precedence over the tag) | `sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8` |
+| `image.pullPolicy`    | Pinniped image pull policy                                                      | `IfNotPresent`                                                            |
+| `image.pullSecrets`   | Pinniped image pull secrets (also given to the kube-cert-agent pods)            | `[]`                                                                      |
+| `replicaCount`        | Number of Concierge replicas                                                    | `2`                                                                       |
+| `updateStrategy.type` | Deployment strategy type                                                        | `RollingUpdate`                                                           |
+| `config`              | Concierge pinniped.yaml settings (upstream defaults)                            | `{}`                                                                      |
 
 ### Impersonation proxy parameters
 
@@ -189,7 +188,7 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 | `impersonationProxy.service`          | Service created by the Concierge itself. Ignored (forced to `type: None`) when `tlsRoute.enabled=true`                                                                                                                         | `{}`   |
 | `impersonationProxy.tls`              | Optional TLS settings (`secretName`, `certificateAuthorityData`). When empty the Concierge generates its own CA                                                                                                                | `{}`   |
 
-### Exposure parameters
+### TLSRoute parameters
 
 | Name                   | Description                                                                                                        | Value                          |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
@@ -202,10 +201,10 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 
 ### Authenticators
 
-| Name                     | Description                                                                 | Value |
-| ------------------------ | --------------------------------------------------------------------------- | ----- |
-| `authenticators.jwt`     | JWTAuthenticators, e.g. one trusting a Pinniped Supervisor FederationDomain | `{}`  |
-| `authenticators.webhook` | WebhookAuthenticators                                                       | `{}`  |
+| Name                     | Description                                                                             | Value |
+| ------------------------ | --------------------------------------------------------------------------------------- | ----- |
+| `authenticators.jwt`     | JWTAuthenticators trusting an OIDC provider (or a Pinniped Supervisor FederationDomain) | `{}`  |
+| `authenticators.webhook` | WebhookAuthenticators                                                                   | `{}`  |
 
 ### Pod parameters
 
@@ -213,9 +212,6 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------- |
 | `resources`                                         | Container resource requests and limits (upstream defaults)                               | `{}`             |
 | `podSecurityContext.enabled`                        | Enable pod Security Context                                                              | `true`           |
-| `podSecurityContext.fsGroupChangePolicy`            | Set filesystem group change policy                                                       | `Always`         |
-| `podSecurityContext.sysctls`                        | Set kernel settings using the sysctl interface                                           | `[]`             |
-| `podSecurityContext.supplementalGroups`             | Set filesystem extra groups                                                              | `[]`             |
 | `podSecurityContext.runAsUser`                      | User ID for the pod                                                                      | `65532`          |
 | `podSecurityContext.runAsGroup`                     | Group ID for the pod                                                                     | `65532`          |
 | `containerSecurityContext.enabled`                  | Enable container Security Context                                                        | `true`           |

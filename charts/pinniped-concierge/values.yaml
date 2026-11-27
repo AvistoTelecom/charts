@@ -50,10 +50,6 @@ image:
 ##
 replicaCount: 2
 
-## @param revisionHistoryLimit Number of old ReplicaSets to retain
-##
-revisionHistoryLimit: 10
-
 ## @param updateStrategy.type Deployment strategy type
 ##
 updateStrategy:
@@ -88,11 +84,9 @@ impersonationProxy:
   externalEndpoint: ""
   service:
     type: LoadBalancer
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "4000"
   tls: {}
 
-## @section Exposure parameters
+## @section TLSRoute parameters
 ## Expose the impersonation proxy through Gateway API instead of a LoadBalancer Service.
 ## The proxy authenticates clients with TLS client certificates, so TLS must reach the pods untouched:
 ## the parent Gateway needs a listener with `protocol: TLS` and `tls.mode: Passthrough` for this hostname.
@@ -119,14 +113,15 @@ tlsRoute:
 ## @section Authenticators
 ## Cluster-scoped authenticators, one per entry: the key is the object name, the value its spec (supports templates).
 ## ref: https://pinniped.dev/docs/reference/api/
-## @param authenticators.jwt [object] JWTAuthenticators, e.g. one trusting a Pinniped Supervisor FederationDomain
+## @param authenticators.jwt [object] JWTAuthenticators trusting an OIDC provider (or a Pinniped Supervisor FederationDomain)
 ## e.g:
 ## jwt:
-##   supervisor:
-##     issuer: https://pinniped.example.com/issuer
-##     audience: my-cluster-0f8a3b
-##     tls:
-##       certificateAuthorityData: <base64 CA, omit for public CAs>
+##   sso:
+##     issuer: https://sso.example.com
+##     audience: <client-id>
+##     claims:
+##       username: email
+##       groups: groups
 ## @param authenticators.webhook [object] WebhookAuthenticators
 ## e.g:
 ## webhook:
@@ -150,17 +145,11 @@ resources:
     memory: 128Mi
 
 ## @param podSecurityContext.enabled Enable pod Security Context
-## @param podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
-## @param podSecurityContext.sysctls Set kernel settings using the sysctl interface
-## @param podSecurityContext.supplementalGroups Set filesystem extra groups
 ## @param podSecurityContext.runAsUser User ID for the pod
 ## @param podSecurityContext.runAsGroup Group ID for the pod
 ##
 podSecurityContext:
   enabled: true
-  fsGroupChangePolicy: Always
-  sysctls: []
-  supplementalGroups: []
   runAsUser: 65532
   runAsGroup: 65532
 
