@@ -849,6 +849,38 @@ entries:
         url: https://keybase.io/avistotelecom/pgp_keys.asc
     apiVersion: v2
     appVersion: v0.48.0
+    created: "2026-11-27T17:21:56.460606132Z"
+    dependencies:
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      tags:
+      - bitnami-common
+      version: 2.36.0
+    description: Pinniped Concierge - credential exchange and impersonation proxy
+      for Kubernetes clusters
+    digest: d1f532f800f8f90d1597204b6dc64548f6802e425915644d69a45db67b285bfb
+    home: https://pinniped.dev
+    icon: https://raw.githubusercontent.com/vmware/pinniped/refs/tags/v0.48.0/site/themes/pinniped/static/img/logo.svg
+    keywords:
+    - pinniped
+    - authentication
+    - oidc
+    maintainers:
+    - email: yann.lacroix@avisto.com
+      name: Brawdunoir
+    name: pinniped-concierge
+    sources:
+    - https://github.com/vmware-tanzu/pinniped
+    type: application
+    urls:
+    - https://github.com/AvistoTelecom/charts/releases/download/pinniped-concierge-0.2.0/pinniped-concierge-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: AF455B903BFED8363C003F9A5E2474CA7617EC66
+        url: https://keybase.io/avistotelecom/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v0.48.0
     created: "2026-11-27T11:12:57.251378542Z"
     dependencies:
     - name: common
@@ -1022,4 +1054,4 @@ entries:
     urls:
     - https://github.com/AvistoTelecom/charts/releases/download/wazuh-agent-4.12.0/wazuh-agent-4.12.0.tgz
     version: 4.12.0
-generated: "2026-11-27T11:12:57.25147058Z"
+generated: "2026-11-27T17:21:56.460682355Z"
