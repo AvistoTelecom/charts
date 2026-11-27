@@ -130,7 +130,7 @@ The Concierge generates the serving certificate for `concierge.example.com` itse
 
 ## Upgrading
 
-The CRDs are regular templates (`crds.install`, enabled by default), so every `helm upgrade` or GitOps sync updates them along with the chart. They carry `helm.sh/resource-policy: keep`: `helm uninstall` leaves them, and the authenticators they hold, in place.
+The CRDs are regular templates (`crds.install`, enabled by default), so every `helm upgrade` or GitOps sync updates them along with the chart. With `crds.keep` (enabled by default) they carry `helm.sh/resource-policy: keep`: `helm uninstall` leaves them, and the authenticators they hold, in place.
 
 ### From 0.1.x
 
@@ -173,9 +173,10 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 
 ### CRD parameters
 
-| Name           | Description                                                                                                                                                                                                    | Value  |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `crds.install` | Render the Concierge CRDs as regular templates (annotated `helm.sh/resource-policy: keep`, so `helm uninstall` leaves them and their objects in place). Disable when the CRDs are managed outside this release | `true` |
+| Name           | Description                                                                                                              | Value  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ | ------ |
+| `crds.install` | Render the Concierge CRDs as regular templates. Disable when the CRDs are managed outside this release                   | `true` |
+| `crds.keep`    | Annotate the CRDs with `helm.sh/resource-policy: keep`, so `helm uninstall` leaves them and every authenticator in place | `true` |
 
 ### Pinniped Concierge parameters
 
