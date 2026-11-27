@@ -28,6 +28,14 @@ commonLabels: {}
 commonAnnotations: {}
 extraDeploy: []
 
+## @section CRD parameters
+## @param crds.install Render the Concierge CRDs as regular templates. Disable when the CRDs are managed outside this release
+## @param crds.keep Annotate the CRDs with `helm.sh/resource-policy: keep`, so `helm uninstall` leaves them and every authenticator in place
+##
+crds:
+  install: true
+  keep: true
+
 ## @section Pinniped Concierge parameters
 
 ## Pinniped image (the same image is used for the kube-cert-agent pods spawned by the Concierge)

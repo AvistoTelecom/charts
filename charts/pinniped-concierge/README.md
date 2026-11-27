@@ -130,16 +130,7 @@ The Concierge generates the serving certificate for `concierge.example.com` itse
 
 ## Upgrading
 
-Helm installs the CRDs placed in `crds/` but never upgrades them:
-
-- **Argo CD** applies them on every sync, nothing to do.
-- **Flux** upgrades them with `spec.install.crds: CreateReplace` and `spec.upgrade.crds: CreateReplace` on the HelmRelease.
-- **Plain Helm / helmfile**: apply them before bumping the chart:
-
-```
-helm pull avisto/pinniped-concierge --version <version> --untar
-kubectl apply --server-side -f pinniped-concierge/crds/
-```
+The CRDs are regular templates (`crds.install`, enabled by default), so every `helm upgrade` or GitOps sync updates them along with the chart. With `crds.keep` (enabled by default) they carry `helm.sh/resource-policy: keep`: `helm uninstall` leaves them, and the authenticators they hold, in place.
 
 The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tools should ignore that field.
 
@@ -164,6 +155,13 @@ The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tool
 | `commonLabels`      | Labels to add to all deployed objects             | `{}`  |
 | `commonAnnotations` | Annotations to add to all deployed objects        | `{}`  |
 | `extraDeploy`       | Array of extra objects to deploy with the release | `[]`  |
+
+### CRD parameters
+
+| Name           | Description                                                                                                              | Value  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ | ------ |
+| `crds.install` | Render the Concierge CRDs as regular templates. Disable when the CRDs are managed outside this release                   | `true` |
+| `crds.keep`    | Annotate the CRDs with `helm.sh/resource-policy: keep`, so `helm uninstall` leaves them and every authenticator in place | `true` |
 
 ### Pinniped Concierge parameters
 
