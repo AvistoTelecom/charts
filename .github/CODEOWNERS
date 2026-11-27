@@ -1,12 +1,6 @@
 # Code owners are auto-requested for review, and the "default protection" ruleset
 # requires one of them to approve. Keep at least two owners per path so an owner's
 # own PR can still be approved. Owners need write access to the repo.
+# Add per-chart lines (e.g. /charts/<name>/ @owner1 @owner2) when ownership diverges.
 
-# Catch-all: CI, scripts, docs, repo config
-*                            @Brawdunoir @Neewolag
-
-/charts/cloudbeaver/         @Neewolag @Lypso @Brawdunoir
-/charts/kubebrowser/         @Brawdunoir @quentin-fougereau
-/charts/pinniped-concierge/  @Brawdunoir @Neewolag
-/charts/raw/                 @Brawdunoir @quentin-fougereau
-/charts/wazuh-agent/         @quentin-fougereau @Brawdunoir
+*  @Brawdunoir @Neewolag
