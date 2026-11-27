@@ -22,7 +22,68 @@ The Concierge spawns kube-cert-agent pods with `hostPath` volumes on control-pla
 
 JWTAuthenticators and WebhookAuthenticators are declared in `authenticators.jwt` / `authenticators.webhook` (object name → spec, see the commented examples in `values.yaml`).
 
-### Exposing the impersonation proxy through Gateway API
+## Quick start
+
+The Concierge trusts an OIDC provider directly (here a public client with PKCE, e.g. a GitLab application with "Confidential" unchecked). A [Pinniped Supervisor](https://pinniped.dev/docs/howto/supervisor/) can sit in between to federate several providers.
+
+```yaml
+# ---- values.yaml ----
+authenticators:
+  jwt:
+    sso:
+      issuer: https://sso.example.com
+      audience: <client-id>   # some providers set the ID token audience to the client ID
+      claims:
+        username: email
+        groups: groups
+
+# Optional: expose the impersonation proxy through a Gateway API TLSRoute
+# instead of a LoadBalancer Service (see "Exposing the impersonation proxy
+# through Gateway API" below for the Gateway listener it needs)
+impersonationProxy:
+  mode: enabled
+tlsRoute:
+  enabled: true
+  hostname: concierge.example.com
+  parentRefs:
+    - name: gateway
+      namespace: gateway
+      sectionName: tls-passthrough
+```
+
+```sh
+kubectl create namespace pinniped-concierge
+kubectl label namespace pinniped-concierge pod-security.kubernetes.io/enforce=privileged
+helm install pinniped-concierge avisto/pinniped-concierge -n pinniped-concierge -f values.yaml
+
+# As cluster admin, generate a kubeconfig to hand out (needs the pinniped CLI).
+# Register http://127.0.0.1:48095/callback as redirect URI at the provider.
+pinniped get kubeconfig --oidc-client-id <client-id> --oidc-scopes openid,profile,email \
+  --oidc-listen-port 48095 > developer.kubeconfig
+# Users log in through their browser on first use. Grant them access with regular
+# RBAC bindings on their username (email) or groups.
+kubectl --kubeconfig developer.kubeconfig get pods
+```
+
+### Handing out a kubeconfig
+
+The kubeconfig from `pinniped get kubeconfig` holds no secret (public CA, client ID and URLs only), so a single file can be shared with every user through a repo or wiki. A few tweaks make it work beyond the admin's machine:
+
+```sh
+pinniped get kubeconfig --pinniped-cli-path pinniped > prod.kubeconfig
+# Cluster, user and context names are copied from the admin kubeconfig ("<admin-name>-pinniped"):
+# rename them to something users recognize (mikefarah/yq v4)
+N=prod; yq -i ".clusters[0].name = \"$N\" | .users[0].name = \"$N\" | .contexts[0].name = \"$N\"
+  | .contexts[0].context = {\"cluster\": \"$N\", \"user\": \"$N\"} | .current-context = \"$N\"" prod.kubeconfig
+```
+
+- `--pinniped-cli-path pinniped`: resolve the CLI from the user's `PATH`. By default the kubeconfig embeds the admin's absolute path (e.g. `/usr/local/bin/pinniped`), which breaks on Homebrew, Windows or `~/bin` installs.
+- `--install-hint`: message kubectl shows when the CLI is missing. Defaults to a link to https://get.pinniped.dev/cli; override it only to point to internal install instructions.
+- Login frequency: with a Supervisor, the CLI refreshes the session silently until the Supervisor session expires. When the Concierge trusts an OIDC provider directly, add `offline_access` to `--oidc-scopes` if the provider supports it, otherwise users get a browser login each time the ID token expires.
+- `--oidc-skip-browser`: print the login URL instead of opening a browser, for users on SSH sessions or jump hosts.
+- The kubeconfig only logs users in. What they can do comes from RBAC bindings on their username or groups, which the chart does not manage (use `extraDeploy` or your usual RBAC tooling).
+
+## Exposing the impersonation proxy through Gateway API
 
 Instead of the LoadBalancer Service the Concierge creates by default, the impersonation proxy can be exposed with a `TLSRoute`:
 
@@ -67,7 +128,7 @@ If external-dns manages your records, note that it does not read `TLSRoute` host
 
 The Concierge generates the serving certificate for `concierge.example.com` itself and publishes its CA in the CredentialIssuer status, where `pinniped get kubeconfig` picks it up. Set `impersonationProxy.tls.secretName` to use your own certificate instead.
 
-### Upgrading
+## Upgrading
 
 Helm installs the CRDs placed in `crds/` but never upgrades them:
 
@@ -81,54 +142,6 @@ kubectl apply --server-side -f pinniped-concierge/crds/
 ```
 
 The Concierge patches `spec.caBundle` of its APIServices at runtime: GitOps tools should ignore that field.
-
-## Quick start
-
-The Concierge trusts an OIDC provider directly (here a public client with PKCE, e.g. a GitLab application with "Confidential" unchecked). A [Pinniped Supervisor](https://pinniped.dev/docs/howto/supervisor/) can sit in between to federate several providers.
-
-```yaml
-# ---- values.yaml ----
-authenticators:
-  jwt:
-    sso:
-      issuer: https://sso.example.com
-      audience: <client-id>   # some providers set the ID token audience to the client ID
-      claims:
-        username: email
-        groups: groups
-```
-
-```sh
-kubectl create namespace pinniped-concierge
-kubectl label namespace pinniped-concierge pod-security.kubernetes.io/enforce=privileged
-helm install pinniped-concierge avisto/pinniped-concierge -n pinniped-concierge -f values.yaml
-
-# As cluster admin, generate a kubeconfig to hand out (needs the pinniped CLI).
-# Register http://127.0.0.1:48095/callback as redirect URI at the provider.
-pinniped get kubeconfig --oidc-client-id <client-id> --oidc-scopes openid,profile,email \
-  --oidc-listen-port 48095 > developer.kubeconfig
-# Users log in through their browser on first use. Grant them access with regular
-# RBAC bindings on their username (email) or groups.
-kubectl --kubeconfig developer.kubeconfig get pods
-```
-
-### Handing out a kubeconfig
-
-The kubeconfig from `pinniped get kubeconfig` holds no secret (public CA, client ID and URLs only), so a single file can be shared with every user through a repo or wiki. A few tweaks make it work beyond the admin's machine:
-
-```sh
-pinniped get kubeconfig --pinniped-cli-path pinniped > prod.kubeconfig
-# Cluster, user and context names are copied from the admin kubeconfig ("<admin-name>-pinniped"):
-# rename them to something users recognize (mikefarah/yq v4)
-N=prod; yq -i ".clusters[0].name = \"$N\" | .users[0].name = \"$N\" | .contexts[0].name = \"$N\"
-  | .contexts[0].context = {\"cluster\": \"$N\", \"user\": \"$N\"} | .current-context = \"$N\"" prod.kubeconfig
-```
-
-- `--pinniped-cli-path pinniped`: resolve the CLI from the user's `PATH`. By default the kubeconfig embeds the admin's absolute path (e.g. `/usr/local/bin/pinniped`), which breaks on Homebrew, Windows or `~/bin` installs.
-- `--install-hint`: message kubectl shows when the CLI is missing. Defaults to a link to https://get.pinniped.dev/cli; override it only to point to internal install instructions.
-- Login frequency: with a Supervisor, the CLI refreshes the session silently until the Supervisor session expires. When the Concierge trusts an OIDC provider directly, add `offline_access` to `--oidc-scopes` if the provider supports it, otherwise users get a browser login each time the ID token expires.
-- `--oidc-skip-browser`: print the login URL instead of opening a browser, for users on SSH sessions or jump hosts.
-- The kubeconfig only logs users in. What they can do comes from RBAC bindings on their username or groups, which the chart does not manage (use `extraDeploy` or your usual RBAC tooling).
 
 ## Parameters
 
