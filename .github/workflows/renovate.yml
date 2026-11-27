@@ -33,4 +33,4 @@ jobs:
           # Commits via the API: authored and signed by the App.
           RENOVATE_PLATFORM_COMMIT: enabled
           RENOVATE_ALLOWED_COMMANDS: '["^npx -y @bitnami/readme-generator-for-helm@2\\.7\\.0 "]'
-          LOG_LEVEL: info
+          LOG_LEVEL: debug
