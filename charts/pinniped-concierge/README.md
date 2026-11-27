@@ -92,7 +92,7 @@ authenticators:
   jwt:
     sso:
       issuer: https://sso.example.com
-      audience: <client-id>   # most providers set the ID token audience to the client ID
+      audience: <client-id>   # some providers set the ID token audience to the client ID
       claims:
         username: email
         groups: groups
