@@ -135,7 +135,7 @@
             "properties": {
                 "mode": {
                     "type": "string",
-                    "description": "Impersonation proxy mode (auto, enabled, disabled). Must be `enabled` when `tlsRoute.enabled=true`",
+                    "description": "Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true`",
                     "default": "auto"
                 },
                 "externalEndpoint": {

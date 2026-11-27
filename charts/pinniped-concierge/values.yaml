@@ -78,7 +78,7 @@ config:
 ## @section Impersonation proxy parameters
 ## Rendered into the CredentialIssuer spec.impersonationProxy
 ## ref: https://pinniped.dev/docs/reference/api/#impersonationproxyspec
-## @param impersonationProxy.mode Impersonation proxy mode (auto, enabled, disabled). Must be `enabled` when `tlsRoute.enabled=true`
+## @param impersonationProxy.mode Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true`
 ## @param impersonationProxy.externalEndpoint Endpoint advertised to clients. Defaults to `tlsRoute.hostname` when the TLSRoute is enabled
 ## @param impersonationProxy.service [object] Service created by the Concierge itself. Ignored (forced to `type: None`) when `tlsRoute.enabled=true`
 ## @param impersonationProxy.tls [object] Optional TLS settings (`secretName`, `certificateAuthorityData`). When empty the Concierge generates its own CA
