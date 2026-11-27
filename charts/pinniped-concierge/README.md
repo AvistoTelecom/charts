@@ -117,10 +117,7 @@ kubectl --kubeconfig developer.kubeconfig get pods
 The kubeconfig from `pinniped get kubeconfig` holds no secret (public CA, client ID and URLs only), so a single file can be shared with every user through a repo or wiki. A few tweaks make it work beyond the admin's machine:
 
 ```sh
-pinniped get kubeconfig \
-  --pinniped-cli-path pinniped \
-  --install-hint "Install the pinniped CLI: https://pinniped.dev/docs/howto/install-cli/" \
-  > prod.kubeconfig
+pinniped get kubeconfig --pinniped-cli-path pinniped > prod.kubeconfig
 # Cluster, user and context names are copied from the admin kubeconfig ("<admin-name>-pinniped"):
 # rename them to something users recognize (mikefarah/yq v4)
 N=prod; yq -i ".clusters[0].name = \"$N\" | .users[0].name = \"$N\" | .contexts[0].name = \"$N\"
@@ -128,7 +125,7 @@ N=prod; yq -i ".clusters[0].name = \"$N\" | .users[0].name = \"$N\" | .contexts[
 ```
 
 - `--pinniped-cli-path pinniped`: resolve the CLI from the user's `PATH`. By default the kubeconfig embeds the admin's absolute path (e.g. `/usr/local/bin/pinniped`), which breaks on Homebrew, Windows or `~/bin` installs.
-- `--install-hint`: message kubectl shows when the CLI is missing; point it to your own install instructions.
+- `--install-hint`: message kubectl shows when the CLI is missing. Defaults to a link to https://get.pinniped.dev/cli; override it only to point to internal install instructions.
 - Login frequency: with a Supervisor, the CLI refreshes the session silently until the Supervisor session expires. When the Concierge trusts an OIDC provider directly, add `offline_access` to `--oidc-scopes` if the provider supports it, otherwise users get a browser login each time the ID token expires.
 - `--oidc-skip-browser`: print the login URL instead of opening a browser, for users on SSH sessions or jump hosts.
 - The kubeconfig only logs users in. What they can do comes from RBAC bindings on their username or groups, which the chart does not manage (use `extraDeploy` or your usual RBAC tooling).
