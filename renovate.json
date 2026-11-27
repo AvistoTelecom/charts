@@ -38,17 +38,13 @@
   ],
   "packageRules": [
     {
-      "matchManagers": ["helm-values"],
-      "bumpVersion": "patch"
-    },
-    {
       "matchFileNames": ["charts/cloudbeaver/**"],
       "groupName": "cloudbeaver",
       "postUpgradeTasks": {
         "commands": [
-          "npx -y @bitnami/readme-generator-for-helm@2.7.0 --readme=charts/cloudbeaver/README.md --values=charts/cloudbeaver/values.yaml --schema=charts/cloudbeaver/values.schema.json"
+          "scripts/renovate-post-upgrade.sh charts/cloudbeaver"
         ],
-        "fileFilters": ["charts/cloudbeaver/README.md", "charts/cloudbeaver/values.schema.json"],
+        "fileFilters": ["charts/cloudbeaver/**"],
         "executionMode": "branch"
       }
     },
@@ -60,9 +56,9 @@
       ],
       "postUpgradeTasks": {
         "commands": [
-          "npx -y @bitnami/readme-generator-for-helm@2.7.0 --readme=charts/pinniped-concierge/README.md --values=charts/pinniped-concierge/values.yaml --schema=charts/pinniped-concierge/values.schema.json"
+          "scripts/renovate-post-upgrade.sh charts/pinniped-concierge"
         ],
-        "fileFilters": ["charts/pinniped-concierge/README.md", "charts/pinniped-concierge/values.schema.json"],
+        "fileFilters": ["charts/pinniped-concierge/**"],
         "executionMode": "branch"
       }
     }
