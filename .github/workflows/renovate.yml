@@ -1,0 +1,36 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency: renovate
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      # A GitHub App token (not GITHUB_TOKEN) so CI runs on the PRs Renovate opens.
+      - name: Get GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          app-id: ${{ vars.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+
+      - name: Run Renovate
+        uses: renovatebot/github-action@v46.3.13
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_ONBOARDING: "false"
+          RENOVATE_REQUIRE_CONFIG: required
+          # Commits via the API: authored and signed by the App.
+          RENOVATE_PLATFORM_COMMIT: enabled
+          RENOVATE_ALLOWED_COMMANDS: '["^npx -y @bitnami/readme-generator-for-helm@2\\.7\\.0 "]'
+          LOG_LEVEL: info
