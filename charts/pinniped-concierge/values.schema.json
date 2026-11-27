@@ -1,0 +1,395 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imageRegistry": {
+                    "type": "string",
+                    "description": "Global Docker image registry",
+                    "default": ""
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "Global Docker registry secret names as an array",
+                    "default": [],
+                    "items": {}
+                },
+                "security": {
+                    "type": "object",
+                    "properties": {
+                        "allowInsecureImages": {
+                            "type": "boolean",
+                            "description": "Allows skipping image verification",
+                            "default": false
+                        }
+                    }
+                },
+                "compatibility": {
+                    "type": "object",
+                    "properties": {
+                        "openshift": {
+                            "type": "object",
+                            "properties": {
+                                "adaptSecurityContext": {
+                                    "type": "string",
+                                    "description": "Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC (auto, force, disabled)",
+                                    "default": "auto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "nameOverride": {
+            "type": "string",
+            "description": "String to partially override common.names.name",
+            "default": ""
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "description": "String to fully override common.names.fullname",
+            "default": ""
+        },
+        "namespaceOverride": {
+            "type": "string",
+            "description": "String to fully override common.names.namespace",
+            "default": ""
+        },
+        "commonLabels": {
+            "type": "object",
+            "description": "Labels to add to all deployed objects",
+            "default": {}
+        },
+        "commonAnnotations": {
+            "type": "object",
+            "description": "Annotations to add to all deployed objects",
+            "default": {}
+        },
+        "extraDeploy": {
+            "type": "array",
+            "description": "Array of extra objects to deploy with the release",
+            "default": [],
+            "items": {}
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "registry": {
+                    "type": "string",
+                    "description": "Pinniped image registry",
+                    "default": "ghcr.io"
+                },
+                "repository": {
+                    "type": "string",
+                    "description": "Pinniped image repository",
+                    "default": "vmware/pinniped/pinniped-server"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Pinniped image tag",
+                    "default": "v0.48.0"
+                },
+                "digest": {
+                    "type": "string",
+                    "description": "Pinniped image digest in the form sha256:aa.... (takes precedence over the tag)",
+                    "default": "sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8"
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "description": "Pinniped image pull policy",
+                    "default": "IfNotPresent"
+                },
+                "pullSecrets": {
+                    "type": "array",
+                    "description": "Pinniped image pull secrets (also given to the kube-cert-agent pods)",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "replicaCount": {
+            "type": "number",
+            "description": "Number of Concierge replicas",
+            "default": 2
+        },
+        "updateStrategy": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Deployment strategy type",
+                    "default": "RollingUpdate"
+                }
+            }
+        },
+        "impersonationProxy": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string",
+                    "description": "Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true`",
+                    "default": "auto"
+                },
+                "externalEndpoint": {
+                    "type": "string",
+                    "description": "Endpoint advertised to clients. Defaults to `tlsRoute.hostname` when the TLSRoute is enabled",
+                    "default": ""
+                },
+                "service": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Type of the Service the Concierge creates for the proxy (LoadBalancer, ClusterIP, None). Forced to `None` when `tlsRoute.enabled=true`",
+                            "default": "LoadBalancer"
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "description": "Annotations for that Service",
+                            "default": {}
+                        }
+                    }
+                }
+            }
+        },
+        "tlsRoute": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Create a TLSRoute to the impersonation proxy",
+                    "default": false
+                },
+                "apiVersion": {
+                    "type": "string",
+                    "description": "TLSRoute API version (v1 in recent Gateway API standard channel releases, v1alpha2 in older experimental channels)",
+                    "default": "gateway.networking.k8s.io/v1"
+                },
+                "hostname": {
+                    "type": "string",
+                    "description": "Hostname (SNI) of the impersonation proxy, e.g. concierge.example.com",
+                    "default": ""
+                },
+                "parentRefs": {
+                    "type": "array",
+                    "description": "Gateways (and passthrough listener sectionName) the route attaches to",
+                    "default": [],
+                    "items": {}
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Additional labels for the TLSRoute",
+                    "default": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Additional annotations for the TLSRoute",
+                    "default": {}
+                }
+            }
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable pod Security Context",
+                    "default": true
+                },
+                "runAsUser": {
+                    "type": "number",
+                    "description": "User ID for the pod",
+                    "default": 65532
+                },
+                "runAsGroup": {
+                    "type": "number",
+                    "description": "Group ID for the pod",
+                    "default": 65532
+                }
+            }
+        },
+        "containerSecurityContext": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable container Security Context",
+                    "default": true
+                },
+                "runAsNonRoot": {
+                    "type": "boolean",
+                    "description": "Set runAsNonRoot",
+                    "default": true
+                },
+                "readOnlyRootFilesystem": {
+                    "type": "boolean",
+                    "description": "Set readOnlyRootFilesystem",
+                    "default": true
+                },
+                "allowPrivilegeEscalation": {
+                    "type": "boolean",
+                    "description": "Set allowPrivilegeEscalation",
+                    "default": false
+                },
+                "capabilities": {
+                    "type": "object",
+                    "properties": {
+                        "drop": {
+                            "type": "array",
+                            "description": "List of capabilities to be dropped",
+                            "default": [
+                                "ALL"
+                            ],
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "seccompProfile": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Set seccomp profile",
+                            "default": "RuntimeDefault"
+                        }
+                    }
+                }
+            }
+        },
+        "livenessProbe": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable livenessProbe",
+                    "default": true
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Initial delay seconds for livenessProbe",
+                    "default": 2
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Period seconds for livenessProbe",
+                    "default": 10
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Timeout seconds for livenessProbe",
+                    "default": 15
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Failure threshold for livenessProbe",
+                    "default": 5
+                }
+            }
+        },
+        "readinessProbe": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable readinessProbe",
+                    "default": true
+                },
+                "initialDelaySeconds": {
+                    "type": "number",
+                    "description": "Initial delay seconds for readinessProbe",
+                    "default": 2
+                },
+                "periodSeconds": {
+                    "type": "number",
+                    "description": "Period seconds for readinessProbe",
+                    "default": 10
+                },
+                "timeoutSeconds": {
+                    "type": "number",
+                    "description": "Timeout seconds for readinessProbe",
+                    "default": 3
+                },
+                "failureThreshold": {
+                    "type": "number",
+                    "description": "Failure threshold for readinessProbe",
+                    "default": 3
+                }
+            }
+        },
+        "podLabels": {
+            "type": "object",
+            "description": "Extra labels for pods",
+            "default": {}
+        },
+        "podAnnotations": {
+            "type": "object",
+            "description": "Annotations for pods",
+            "default": {}
+        },
+        "priorityClassName": {
+            "type": "string",
+            "description": "Pod priority class name (also used for kube-cert-agent pods)",
+            "default": ""
+        },
+        "nodeSelector": {
+            "type": "object",
+            "description": "Node labels for pod assignment",
+            "default": {}
+        },
+        "tolerations": {
+            "type": "array",
+            "description": "Tolerations for pod assignment",
+            "default": [],
+            "items": {}
+        },
+        "affinity": {
+            "type": "object",
+            "description": "Affinity for pod assignment. When empty, a soft pod anti-affinity on hostname is applied",
+            "default": {}
+        },
+        "topologySpreadConstraints": {
+            "type": "array",
+            "description": "Topology Spread Constraints for pod assignment",
+            "default": [],
+            "items": {}
+        },
+        "extraEnvVars": {
+            "type": "array",
+            "description": "Array with extra environment variables",
+            "default": [],
+            "items": {}
+        },
+        "extraVolumes": {
+            "type": "array",
+            "description": "Optionally specify extra list of additional volumes",
+            "default": [],
+            "items": {}
+        },
+        "extraVolumeMounts": {
+            "type": "array",
+            "description": "Optionally specify extra list of additional volumeMounts",
+            "default": [],
+            "items": {}
+        },
+        "pdb": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "description": "Create a PodDisruptionBudget",
+                    "default": true
+                },
+                "maxUnavailable": {
+                    "type": "number",
+                    "description": "Max number of pods that can be unavailable",
+                    "default": 1
+                }
+            }
+        }
+    }
+}

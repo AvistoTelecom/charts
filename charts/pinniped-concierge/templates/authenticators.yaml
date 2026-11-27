@@ -1,0 +1,18 @@
+{{- /* One cluster-scoped authenticator per map entry: the key is metadata.name, the value is the spec (rendered with tpl). */}}
+{{- range $r := list
+  (dict "kind" "JWTAuthenticator" "items" .Values.authenticators.jwt)
+  (dict "kind" "WebhookAuthenticator" "items" .Values.authenticators.webhook) }}
+{{- range $name, $spec := $r.items }}
+---
+apiVersion: authentication.concierge.pinniped.dev/v1alpha1
+kind: {{ $r.kind }}
+metadata:
+  name: {{ $name }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: concierge
+  {{- if $.Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec: {{- include "common.tplvalues.render" ( dict "value" $spec "context" $ ) | nindent 2 }}
+{{- end }}
+{{- end }}

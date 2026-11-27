@@ -1,0 +1,232 @@
+## @section Global parameters
+## @param global.imageRegistry Global Docker image registry
+## @param global.imagePullSecrets Global Docker registry secret names as an array
+## @param global.security.allowInsecureImages Allows skipping image verification
+## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC (auto, force, disabled)
+##
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  security:
+    allowInsecureImages: false
+  compatibility:
+    openshift:
+      adaptSecurityContext: auto
+
+## @section Common parameters
+## @param nameOverride String to partially override common.names.name
+## @param fullnameOverride String to fully override common.names.fullname
+## @param namespaceOverride String to fully override common.names.namespace
+## @param commonLabels Labels to add to all deployed objects
+## @param commonAnnotations Annotations to add to all deployed objects
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+commonLabels: {}
+commonAnnotations: {}
+extraDeploy: []
+
+## @section Pinniped Concierge parameters
+
+## Pinniped image (the same image is used for the kube-cert-agent pods spawned by the Concierge)
+## @param image.registry [default: ghcr.io] Pinniped image registry
+## @param image.repository [default: vmware/pinniped/pinniped-server] Pinniped image repository
+## @param image.tag [default: v0.48.0] Pinniped image tag
+## @param image.digest Pinniped image digest in the form sha256:aa.... (takes precedence over the tag)
+## @param image.pullPolicy Pinniped image pull policy
+## @param image.pullSecrets Pinniped image pull secrets (also given to the kube-cert-agent pods)
+##
+image:
+  registry: ghcr.io
+  repository: vmware/pinniped/pinniped-server
+  tag: v0.48.0
+  digest: sha256:c98ed3977081d7e18be6a5176656371621a1deea1a67b5a42f8b152b856ce4c8
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+## @param replicaCount Number of Concierge replicas
+##
+replicaCount: 2
+
+## @param updateStrategy.type Deployment strategy type
+##
+updateStrategy:
+  type: RollingUpdate
+
+## Concierge static configuration (pinniped.yaml body). The chart merges the release-derived `apiGroupSuffix`, `names`, `labels` and `kubeCertAgent` keys on top.
+## ref: https://github.com/vmware-tanzu/pinniped/blob/main/deploy/concierge/values.yaml
+## @param config [object] Concierge pinniped.yaml settings (upstream defaults)
+##
+config:
+  api:
+    servingCertificate:
+      durationSeconds: 2592000
+      renewBeforeSeconds: 2160000
+  aggregatedAPIServerDisableAdmissionPlugins: []
+  tls:
+    onedottwo:
+      allowedCiphers: []
+  audit:
+    logUsernamesAndGroups: disabled
+
+## @section Impersonation proxy parameters
+## Rendered into the CredentialIssuer spec.impersonationProxy
+## ref: https://pinniped.dev/docs/reference/api/#impersonationproxyspec
+## @param impersonationProxy.mode Impersonation proxy mode: `auto` runs it only when the cluster has no visible control-plane nodes (managed clusters such as EKS, GKE, AKS), `enabled` always, `disabled` never. Must be `enabled` when `tlsRoute.enabled=true`
+## @param impersonationProxy.externalEndpoint Endpoint advertised to clients. Defaults to `tlsRoute.hostname` when the TLSRoute is enabled
+## @param impersonationProxy.service.type Type of the Service the Concierge creates for the proxy (LoadBalancer, ClusterIP, None). Forced to `None` when `tlsRoute.enabled=true`
+## @param impersonationProxy.service.annotations Annotations for that Service
+## @param impersonationProxy.tls [object] Optional TLS settings (`secretName`, `certificateAuthorityData`). When empty the Concierge generates its own CA
+##
+impersonationProxy:
+  mode: auto
+  externalEndpoint: ""
+  service:
+    type: LoadBalancer
+    ## e.g. on AWS, keep long-lived streams (kubectl exec, logs -f, port-forward) open past the 60s ELB idle timeout:
+    ##   service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "4000"
+    annotations: {}
+  tls: {}
+
+## @section TLSRoute parameters
+## Expose the impersonation proxy through Gateway API instead of a LoadBalancer Service.
+## The proxy authenticates clients with TLS client certificates, so TLS must reach the pods untouched:
+## the parent Gateway needs a listener with `protocol: TLS` and `tls.mode: Passthrough` for this hostname.
+## @param tlsRoute.enabled Create a TLSRoute to the impersonation proxy
+## @param tlsRoute.apiVersion TLSRoute API version (v1 in recent Gateway API standard channel releases, v1alpha2 in older experimental channels)
+## @param tlsRoute.hostname Hostname (SNI) of the impersonation proxy, e.g. concierge.example.com
+## @param tlsRoute.parentRefs Gateways (and passthrough listener sectionName) the route attaches to
+## e.g:
+## parentRefs:
+##   - name: main-gateway
+##     namespace: gateway
+##     sectionName: tls-passthrough
+## @param tlsRoute.labels Additional labels for the TLSRoute
+## @param tlsRoute.annotations Additional annotations for the TLSRoute
+##
+tlsRoute:
+  enabled: false
+  apiVersion: gateway.networking.k8s.io/v1
+  hostname: ""
+  parentRefs: []
+  labels: {}
+  annotations: {}
+
+## @section Authenticators
+## Cluster-scoped authenticators, one per entry: the key is the object name, the value its spec (supports templates).
+## ref: https://pinniped.dev/docs/reference/api/
+## @param authenticators.jwt [object] JWTAuthenticators trusting an OIDC provider (or a Pinniped Supervisor FederationDomain)
+## e.g:
+## jwt:
+##   sso:
+##     issuer: https://sso.example.com
+##     audience: <client-id>
+##     claims:
+##       username: email
+##       groups: groups
+## @param authenticators.webhook [object] WebhookAuthenticators
+## e.g:
+## webhook:
+##   my-webhook:
+##     endpoint: https://webhook.example.com/authenticate
+##
+authenticators:
+  jwt: {}
+  webhook: {}
+
+## @section Pod parameters
+
+## @param resources [object] Container resource requests and limits (upstream defaults)
+##
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+## @param podSecurityContext.enabled Enable pod Security Context
+## @param podSecurityContext.runAsUser User ID for the pod
+## @param podSecurityContext.runAsGroup Group ID for the pod
+##
+podSecurityContext:
+  enabled: true
+  runAsUser: 65532
+  runAsGroup: 65532
+
+## @param containerSecurityContext.enabled Enable container Security Context
+## @param containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+## @param containerSecurityContext.runAsNonRoot Set runAsNonRoot
+## @param containerSecurityContext.readOnlyRootFilesystem Set readOnlyRootFilesystem
+## @param containerSecurityContext.allowPrivilegeEscalation Set allowPrivilegeEscalation
+## @param containerSecurityContext.capabilities.drop List of capabilities to be dropped
+## @param containerSecurityContext.seccompProfile.type Set seccomp profile
+##
+containerSecurityContext:
+  enabled: true
+  seLinuxOptions: {}
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: RuntimeDefault
+
+## @param livenessProbe.enabled Enable livenessProbe
+## @param livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+## @param livenessProbe.periodSeconds Period seconds for livenessProbe
+## @param livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+## @param livenessProbe.failureThreshold Failure threshold for livenessProbe
+##
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 2
+  periodSeconds: 10
+  timeoutSeconds: 15
+  failureThreshold: 5
+
+## @param readinessProbe.enabled Enable readinessProbe
+## @param readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+## @param readinessProbe.periodSeconds Period seconds for readinessProbe
+## @param readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+## @param readinessProbe.failureThreshold Failure threshold for readinessProbe
+##
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 2
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+## @param podLabels Extra labels for pods
+## @param podAnnotations Annotations for pods
+## @param priorityClassName Pod priority class name (also used for kube-cert-agent pods)
+## @param nodeSelector Node labels for pod assignment
+## @param tolerations Tolerations for pod assignment
+## @param affinity Affinity for pod assignment. When empty, a soft pod anti-affinity on hostname is applied
+## @param topologySpreadConstraints Topology Spread Constraints for pod assignment
+## @param extraEnvVars Array with extra environment variables
+## @param extraVolumes Optionally specify extra list of additional volumes
+## @param extraVolumeMounts Optionally specify extra list of additional volumeMounts
+##
+podLabels: {}
+podAnnotations: {}
+priorityClassName: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+extraEnvVars: []
+extraVolumes: []
+extraVolumeMounts: []
+
+## @param pdb.create Create a PodDisruptionBudget
+## @param pdb.maxUnavailable Max number of pods that can be unavailable
+##
+pdb:
+  create: true
+  maxUnavailable: 1

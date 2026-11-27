@@ -1,0 +1,38 @@
+{{- include "pinniped-concierge.validate" . -}}
+{{- $fullname := include "common.names.fullname" . -}}
+{{- $proxy := include "pinniped-concierge.impersonationServiceAccountName" . -}}
+{{- $kubeCertAgent := dict "namePrefix" (printf "%s-kube-cert-agent-" $fullname) "image" (include "pinniped-concierge.image" .) -}}
+{{- with .Values.priorityClassName }}{{ $_ := set $kubeCertAgent "priorityClassName" . }}{{ end -}}
+{{- $pullSecrets := list -}}
+{{- range (concat .Values.global.imagePullSecrets .Values.image.pullSecrets) }}{{ if kindIs "map" . }}{{ $pullSecrets = append $pullSecrets .name }}{{ else }}{{ $pullSecrets = append $pullSecrets . }}{{ end }}{{ end -}}
+{{- with $pullSecrets }}{{ $_ := set $kubeCertAgent "imagePullSecrets" . }}{{ end -}}
+{{- $generated := dict
+  "apiGroupSuffix" "pinniped.dev"
+  "names" (dict
+    "servingCertificateSecret" (printf "%s-api-tls-serving-certificate" $fullname)
+    "credentialIssuer" $fullname
+    "apiService" (include "pinniped-concierge.apiServiceName" .)
+    "impersonationLoadBalancerService" (printf "%s-load-balancer" $proxy)
+    "impersonationClusterIPService" (printf "%s-cluster-ip" $proxy)
+    "impersonationTLSCertificateSecret" (printf "%s-tls-serving-certificate" $proxy)
+    "impersonationCACertificateSecret" (printf "%s-ca-certificate" $proxy)
+    "impersonationSignerSecret" (printf "%s-signer-ca-certificate" $proxy)
+    "agentServiceAccount" (include "pinniped-concierge.agentServiceAccountName" .)
+    "impersonationProxyServiceAccount" $proxy
+    "impersonationProxyLegacySecret" $proxy)
+  "labels" (include "pinniped-concierge.appLabel" . | fromYaml)
+  "kubeCertAgent" $kubeCertAgent
+-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: concierge
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  pinniped.yaml: |
+    {{- mergeOverwrite (deepCopy .Values.config) $generated | toYaml | nindent 4 }}
