@@ -84,6 +84,9 @@ impersonationProxy:
   externalEndpoint: ""
   service:
     type: LoadBalancer
+    ## On AWS, keep long-lived streams (kubectl exec, logs -f, port-forward) open past the 60s ELB idle timeout:
+    # annotations:
+    #   service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "4000"
   tls: {}
 
 ## @section TLSRoute parameters
